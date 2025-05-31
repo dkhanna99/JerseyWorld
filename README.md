@@ -1,0 +1,1 @@
+## A basic mockup of an e-commerce site built using React and Redux.
