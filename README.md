@@ -1,1 +1,3 @@
-## A basic mockup of an e-commerce site built using React and Redux.
+# Dhruv Khanna
+## Assignment 2
+### A basic mockup of an e-commerce site built using React and Redux.
