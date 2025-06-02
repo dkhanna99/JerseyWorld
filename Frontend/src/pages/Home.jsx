@@ -12,6 +12,7 @@ import ProductCard from "../components/ProductCard.jsx";
 import { Link } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
 const Home = () => {
+    
     const dispatch = useDispatch()
     const products = useSelector(state => state.products)
     useEffect(() =>{
@@ -62,7 +63,7 @@ const Home = () => {
                     {/* Centered Top Products Heading */}
                     <div className="flex justify-center mb-6">
                         <Link
-                            to="/products"
+                            to="/shop"
                             className="inline-flex items-center gap-2 text-4xl font-extrabold !text-black !underline no-underline hover:no-underline group"
                         >
                             Top Products
