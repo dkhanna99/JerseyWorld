@@ -15,6 +15,9 @@ import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { mockData } from './assets/mockData.jsx';
 import { setProducts } from './redux/productSlice.jsx';
+import ScrollToTop from "./components/ScrollToTop.jsx";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function App() {
     const dispatch = useDispatch();
 
@@ -25,6 +28,7 @@ function App() {
     return (
        <BrowserRouter>
            <Navbar />
+           <ScrollToTop />
            <Routes>
                <Route path="/" element={<Home />}></Route>
                <Route path="/shop" element={<Shop />}></Route>
@@ -37,7 +41,16 @@ function App() {
                <Route path="/product/:id" element={<ProductDetail />}></Route>
            </Routes>
            <Footer />
+           <ToastContainer
+               position="bottom-right"
+               autoClose={2000}
+               hideProgressBar
+               newestOnTop
+               closeOnClick
+               pauseOnHover
+           />
        </BrowserRouter>
+        
   )
 }
 

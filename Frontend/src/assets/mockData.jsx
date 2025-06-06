@@ -27,6 +27,7 @@ export const mockData = [
         description: "Product 1",
         price: 120,
         rating: 5,
+        category: "Clubs",
     },
     {
         id:2,
@@ -35,6 +36,7 @@ export const mockData = [
         description: "Product 2",
         price: 120,
         rating: 3,
+        category: "Clubs",
     },
     {
         id:3,
@@ -43,6 +45,7 @@ export const mockData = [
         description: "Product 3",
         price: 120,
         rating: 4,
+        category: "Clubs",
     },
     {
         id:4,
@@ -51,6 +54,7 @@ export const mockData = [
         description: "Product 4",
         price: 110,
         rating: 5,
+        category: "Nations",
     },
     {
         id:5,
@@ -59,6 +63,7 @@ export const mockData = [
         description: "Product 5",
         price: 99,
         rating: 4.5,
+        category: "Nations",
     },
     {
         id:6,
@@ -67,6 +72,7 @@ export const mockData = [
         description: "Product 6",
         price: 145,
         rating: 4.5,
+        category: "Fan Merch",
     },
     {
         id:7,
@@ -75,6 +81,7 @@ export const mockData = [
         description: "Product 7",
         price: 155,
         rating: 5,
+        category: "Fan Merch",
     },
     {
         id:8,
@@ -83,6 +90,7 @@ export const mockData = [
         description: "Product 8",
         price: 89,
         rating: 4,
+        category: "Kids",
     },
     {
         id:9,
@@ -91,6 +99,7 @@ export const mockData = [
         description: "Product 9",
         price: 89,
         rating: 4,
+        category: "Kids",
     },
     {
         id:10,
@@ -99,6 +108,7 @@ export const mockData = [
         description: "Product 10",
         price: 50,
         rating: 3.5,
+        category: "Training",
     },
     {
         id:11,
@@ -107,5 +117,6 @@ export const mockData = [
         description: "Product 11",
         price: 50,
         rating: 3.5,
+        category: "Training",
     },
 ]

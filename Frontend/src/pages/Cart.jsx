@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import {Link, Navigate} from 'react-router-dom';
 import EmptyCart from '../assets/empty-cart.png';
 import { FaTrashAlt } from "react-icons/fa";
 import {removeFromCart, increaseQuantity, decreaseQuantity} from "../redux/cartSlice.jsx";
@@ -8,12 +8,9 @@ const Cart = () => {
     const cart = useSelector((state) => state.cart);
     const [address, setAddress] = useState('main street, 0012');
     const dispatch = useDispatch()
-    const handleContinueShopping = () => {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-    };
+    /*const handleContinueShopping = () => {
+        navigate('/shop');
+    };*/
 
     return (
         <div className="min-h-[90vh] w-screen flex items-center justify-center bg-white px-4 py-8">
@@ -121,12 +118,12 @@ const Cart = () => {
                         className="max-w-xs w-full object-contain"
                     />
                     <h2 className="text-2xl font-semibold text-gray-700">Your Cart is Empty</h2>
-                    <button
-                        onClick={handleContinueShopping}
-                        className="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition duration-300"
+                    <Link
+                        to="/shop"
+                        className="bg-blue-600 !text-white py-2 px-6 rounded hover:bg-red-800 transform hover:scale-105 transition-transform duration-300"
                     >
                         Continue Shopping
-                    </button>
+                    </Link>
                 </div>
             )}
         </div>

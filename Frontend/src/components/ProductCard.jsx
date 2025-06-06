@@ -24,10 +24,9 @@ const ProductCard = ({ product }) => {
     };
 
     const handleAddToCart = (e, product) => {
-        e.stopPropagation(); // Prevent link navigation
+        e.stopPropagation(); 
         e.preventDefault();
         dispatch(addToCart(product));
-        alert("Product Added Successfully!");
     };
 
     return (
@@ -37,6 +36,7 @@ const ProductCard = ({ product }) => {
                 <img
                     src={product.image}
                     alt={product.name}
+                    loading="lazy"
                     className="w-full h-48 object-contain mb-4"
                 />
 
