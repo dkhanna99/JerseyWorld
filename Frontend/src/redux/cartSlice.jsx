@@ -5,7 +5,17 @@ import { toast } from 'react-toastify';
 const loadCartFromStorage = () => {
     try {
         const serializedCart = localStorage.getItem('cart');
-        return serializedCart ? JSON.parse(serializedCart) : {
+        if (serializedCart) {
+            const loadedCart = JSON.parse(serializedCart);
+
+            // Sanitize bad data
+            return {
+                products: loadedCart.products || [],
+                totalQuantity: Math.max(0, loadedCart.totalQuantity || 0),
+                totalPrice: Math.max(0, loadedCart.totalPrice || 0),  // Prevent negative price
+            };
+        }
+        return {
             products: [],
             totalQuantity: 0,
             totalPrice: 0,
@@ -41,21 +51,20 @@ const cartSlice = createSlice({
             const existingItem = state.products.find((item) => item.id === newItem.id);
 
             if (existingItem) {
-                existingItem.quantity++;
-                existingItem.totalPrice += newItem.price;
+                existingItem.quantity += newItem.quantity;
+                existingItem.totalPrice += newItem.price * newItem.quantity;
             } else {
                 state.products.push({
                     id: newItem.id,
                     name: newItem.name,
                     price: newItem.price,
-                    quantity: 1,
-                    totalPrice: newItem.price,
+                    quantity: newItem.quantity,
+                    totalPrice: newItem.price * newItem.quantity,
                     image: newItem.image,
                 });
             }
-
-            state.totalPrice += newItem.price;
-            state.totalQuantity++;
+            state.totalPrice += newItem.price * newItem.quantity;
+            state.totalQuantity += newItem.quantity;
 
             saveCartToStorage(state);
             toast.success(`${newItem.name} added to cart!`);

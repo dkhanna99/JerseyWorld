@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { FaCarSide, FaQuestion } from 'react-icons/fa';
 import { fetchProducts } from '../redux/productSlice';
-import {addToCart} from "../redux/cartSlice.jsx";
+import { addToCart } from "../redux/cartSlice.jsx";
 
 const ProductDetail = () => {
     const dispatch = useDispatch();
@@ -11,10 +11,12 @@ const ProductDetail = () => {
     const products = useSelector((state) => state.products?.products) || [];
     const [product, setProduct] = useState();
     const [quantity, setQuantity] = useState(1);
-    const handleAddToCart = (e, product) => {
+
+    const handleAddToCart = (e) => {
         e.stopPropagation();
         e.preventDefault();
-        dispatch(addToCart(product));
+        const safeQuantity = Number(quantity) > 0 ? Number(quantity) : 1;
+        dispatch(addToCart({ ...product, quantity: safeQuantity }));
     };
 
     useEffect(() => {
@@ -32,7 +34,7 @@ const ProductDetail = () => {
                     <img
                         src={product.image}
                         alt={product.name}
-                        className="h-full object-contain "
+                        className="h-full object-contain"
                     />
                 </div>
 
@@ -44,7 +46,7 @@ const ProductDetail = () => {
                     {/* Quantity Selector */}
                     <div className="flex items-center mb-4 gap-x-2">
                         <button
-                            onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
+                            onClick={() => setQuantity(q => Math.max(1, q - 1))}
                             className="!bg-gray-200 text-black px-3 py-1 rounded hover:bg-gray-300 transition"
                         >
                             -
@@ -58,20 +60,17 @@ const ProductDetail = () => {
                             className="border p-2 w-16 text-center text-black bg-gray-100 rounded"
                         />
                         <button
-                            onClick={() => setQuantity(quantity + 1)}
+                            onClick={() => setQuantity(q => q + 1)}
                             className="!bg-gray-200 text-black px-3 py-1 rounded hover:bg-gray-300 transition"
                         >
                             +
                         </button>
                         <button
-                            onClick={(e) => handleAddToCart(e, product)}
+                            onClick={handleAddToCart}
                             className="!bg-red-600 text-white py-2 px-6 rounded hover:bg-red-700 transition duration-300"
                         >
                             Add to Cart
                         </button>
-                        {/*<button className="!bg-red-600 text-white py-2 px-6 rounded hover:bg-red-800 transform hover:scale-105 transition-transform duration-300 ml-4">
-                            Add to Cart
-                        </button>*/}
                     </div>
 
                     {/* Delivery & Return Section */}
