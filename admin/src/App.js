@@ -1,31 +1,52 @@
 import './App.css';
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
 import Header from "./components/Header";
 import "bootstrap/dist/css/bootstrap.min.css"
 import Sidebar from "./components/Sidebar";
+import {createContext, useState} from "react";
+
+const MyContext = createContext();
 
 function App() {
-  return (
-      <BrowserRouter>
-          <Header />
-          <div className="main d-flex">
-              <div
-                  className="sidebarWrapper">
-                  <Sidebar />
-              </div>
-              
-              <div className="content">
-                  <Routes>
-                      <Route path="/" exact={true} element={<Dashboard/>}/>
-                      <Route path="/dashboard" exact={true} element={<Dashboard/>}/>
+    const [isLogin, setIsLogin] = useState(false);
+    const [isHideSidebarAndHeader, setIsHideSidebarAndHeader] = useState(false);
 
-                  </Routes> 
-              </div>
-          </div>
-        
-      </BrowserRouter>
-  );
+    const values = {
+        isLogin,
+        setIsLogin,
+        isHideSidebarAndHeader,
+        setIsHideSidebarAndHeader
+    };
+
+    return (
+        <MyContext.Provider value={values}>
+            <BrowserRouter>
+                {
+                    isHideSidebarAndHeader !== true &&
+                    <Header />
+                }
+                <div className="main d-flex">
+                    {
+                        isHideSidebarAndHeader !== true &&
+                        <div className="sidebarWrapper">
+                            <Sidebar />
+                        </div>
+                    }
+
+                    <div className={`content ${isHideSidebarAndHeader === true && 'full'}`}>
+                        <Routes>
+                            <Route path="/" exact element={<Dashboard />} />
+                            <Route path="/dashboard" exact element={<Dashboard />} />
+                            <Route path="/login" exact element={<Login />} />
+                        </Routes>
+                    </div>
+                </div>
+            </BrowserRouter>
+        </MyContext.Provider>
+    );
 }
 
 export default App;
+export { MyContext };

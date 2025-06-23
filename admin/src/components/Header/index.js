@@ -24,6 +24,7 @@ import Tooltip from '@mui/material/Tooltip';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
+import { MyContext} from '../../App'
 
 const Header = () => {
 
@@ -47,6 +48,8 @@ const Header = () => {
     const handleClosenotificationsDrop = () => {
         setisOpennotificationDrop(false);
     };
+
+    const context = useContext(MyContext);
 
     return (
         <>
@@ -245,53 +248,62 @@ const Header = () => {
                                 </Menu>
                             </div>
 
-                            <div className="myAccWrapper">
-                                <Button className="myAcc d-flex align-items-center"
-                                        onClick={handleOpenMyAccDrop}>
-                                    <div className="userImg">
+                            {
+                                context.isLogin !== true ?
+                                    <Link to={'/login'}><Button className="btn-blue btn-lg">Sign In</Button>
+                                        </Link> 
+                                    :
+
+                                    <div className="myAccWrapper">
+                                        <Button className="myAcc d-flex align-items-center"
+                                                onClick={handleOpenMyAccDrop}>
+                                            <div className="userImg">
                                 <span className="rounded-circle">
                                 <img
                                     src="https://thumbs.dreamstime.com/b/cartoon-smiling-boy-vector-illustration-avatar-profile-picture-use-vibrant-young-wearing-casual-hoodie-character-364611515.jpg"/>
                                 </span>
+                                            </div>
+
+                                            <div className="userInfo">
+                                                <h4>Dhruv Khanna</h4>
+                                                <p className="mb-0">@dk99</p>
+                                            </div>
+
+                                        </Button>
+
+                                        <Menu
+                                            anchorEl={anchorEl}
+                                            id="account-menu"
+                                            open={openMyAcc}
+                                            onClose={handleCloseMyAccDrop}
+                                            onClick={handleCloseMyAccDrop}
+                                            transformOrigin={{horizontal: 'right', vertical: 'top'}}
+                                            anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+                                        >
+                                            <MenuItem onClick={handleCloseMyAccDrop}>
+                                                <ListItemIcon>
+                                                    <PersonAdd fontSize="small"/>
+                                                </ListItemIcon>
+                                                My Account
+                                            </MenuItem>
+                                            <MenuItem onClick={handleCloseMyAccDrop}>
+                                                <ListItemIcon>
+                                                    <Settings fontSize="small"/>
+                                                </ListItemIcon>
+                                                Reset Password
+                                            </MenuItem>
+                                            <MenuItem onClick={handleCloseMyAccDrop}>
+                                                <ListItemIcon>
+                                                    <Logout fontSize="small"/>
+                                                </ListItemIcon>
+                                                Logout
+                                            </MenuItem>
+                                        </Menu>
+
                                     </div>
-
-                                    <div className="userInfo">
-                                        <h4>Dhruv Khanna</h4>
-                                        <p className="mb-0">@dk99</p>
-                                    </div>
-
-                                </Button>
-
-                                <Menu
-                                    anchorEl={anchorEl}
-                                    id="account-menu"
-                                    open={openMyAcc}
-                                    onClose={handleCloseMyAccDrop}
-                                    onClick={handleCloseMyAccDrop}
-                                    transformOrigin={{horizontal: 'right', vertical: 'top'}}
-                                    anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
-                                >
-                                    <MenuItem onClick={handleCloseMyAccDrop}>
-                                        <ListItemIcon>
-                                            <PersonAdd fontSize="small"/>
-                                        </ListItemIcon>
-                                        My Account
-                                    </MenuItem>
-                                    <MenuItem onClick={handleCloseMyAccDrop}>
-                                        <ListItemIcon>
-                                            <Settings fontSize="small"/>
-                                        </ListItemIcon>
-                                        Reset Password
-                                    </MenuItem>
-                                    <MenuItem onClick={handleCloseMyAccDrop}>
-                                        <ListItemIcon>
-                                            <Logout fontSize="small"/>
-                                        </ListItemIcon>
-                                        Logout
-                                    </MenuItem>
-                                </Menu>
-
-                            </div>
+                            }
+                            
+                            
 
                         </div>
 
