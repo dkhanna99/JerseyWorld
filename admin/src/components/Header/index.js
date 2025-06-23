@@ -71,7 +71,7 @@ const Header = () => {
                         </div>
 
                         <div className="col-sm-7 d-flex align-items-center justify-content-end gap-3 part3">
-                            <Button className="rounded-circle mr-3"><MdMenuOpen/></Button>
+                            
                             <Button className="rounded-circle mr-3"><MdDarkMode/></Button>
                             <Button className="rounded-circle mr-3"><IoMdCart/></Button>
                             <Button className="rounded-circle mr-3"><MdEmail/></Button>
