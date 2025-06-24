@@ -7,6 +7,8 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import Sidebar from "./components/Sidebar";
 import {createContext, useEffect, useState} from "react";
 import SignUp from "./pages/SignUp";
+import ProductDetails from "./pages/ProductDetails";
+import Products from "./pages/Products";
 
 const MyContext = createContext();
 
@@ -44,6 +46,8 @@ function App() {
                             <Route path="/dashboard" exact element={<Dashboard />} />
                             <Route path="/login" exact element={<Login />} />
                             <Route path="/signUp" exact element={<SignUp />} />
+                            <Route path="/products" exact element={<Products />} />
+                            <Route path="/product/details" exact element={<ProductDetails />} />
                         </Routes>
                     </div>
                 </div>

@@ -13,6 +13,7 @@ import {useContext, useEffect, useState} from "react";
 import Button from "@mui/material/Button";
 import {FaEye} from "react-icons/fa6";
 import {MyContext} from "../../App";
+import {Link} from "react-router-dom";
 
 const Dashboard = () => {
 
@@ -140,7 +141,9 @@ const Dashboard = () => {
                             <td>5</td>
                             <td>
                                 <div className="actions d-flex align-items-center">
-                                    <Button className="secondary" color="secondary"><FaEye /></Button>
+                                    <Link to="/product/details">
+                                     <Button className="secondary" color="secondary"><FaEye /></Button>
+                                    </Link>
                                     <Button className="success" color="success"><FaPencilAlt /></Button>
                                     <Button className="error" color="error"><MdDelete /></Button>
                                 </div>
@@ -165,7 +168,9 @@ const Dashboard = () => {
                             <td>5</td>
                             <td>
                                 <div className="actions d-flex align-items-center">
-                                    <Button className="secondary" color="secondary"><FaEye /></Button>
+                                    <Link to="/product/details">
+                                        <Button className="secondary" color="secondary"><FaEye /></Button>
+                                    </Link>
                                     <Button className="success" color="success"><FaPencilAlt /></Button>
                                     <Button className="error" color="error"><MdDelete /></Button>
                                 </div>
@@ -190,7 +195,9 @@ const Dashboard = () => {
                             <td>5</td>
                             <td>
                                 <div className="actions d-flex align-items-center">
-                                    <Button className="secondary" color="secondary"><FaEye /></Button>
+                                    <Link to="/product/details">
+                                        <Button className="secondary" color="secondary"><FaEye /></Button>
+                                    </Link>
                                     <Button className="success" color="success"><FaPencilAlt /></Button>
                                     <Button className="error" color="error"><MdDelete /></Button>
                                 </div>
