@@ -9,15 +9,21 @@ import MenuItem from '@mui/material/MenuItem';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import {useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import Button from "@mui/material/Button";
 import {FaEye} from "react-icons/fa6";
+import {MyContext} from "../../App";
 
 const Dashboard = () => {
 
     const [showBy, setshowBy] = useState(10);
     const [showBysetCatBy, setCatBy] = useState("");
     
+    const context = useContext(MyContext);
+    
+    useEffect(() => {
+        context.setIsHideSidebarAndHeader(false);
+    })
     return (
         <>
             <div className="right-content w-100">

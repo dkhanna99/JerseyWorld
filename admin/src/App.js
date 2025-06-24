@@ -5,7 +5,8 @@ import Login from "./pages/Login";
 import Header from "./components/Header";
 import "bootstrap/dist/css/bootstrap.min.css"
 import Sidebar from "./components/Sidebar";
-import {createContext, useState} from "react";
+import {createContext, useEffect, useState} from "react";
+import SignUp from "./pages/SignUp";
 
 const MyContext = createContext();
 
@@ -19,8 +20,10 @@ function App() {
         isHideSidebarAndHeader,
         setIsHideSidebarAndHeader
     };
-
-    return (
+    
+  
+    
+      return (
         <MyContext.Provider value={values}>
             <BrowserRouter>
                 {
@@ -40,6 +43,7 @@ function App() {
                             <Route path="/" exact element={<Dashboard />} />
                             <Route path="/dashboard" exact element={<Dashboard />} />
                             <Route path="/login" exact element={<Login />} />
+                            <Route path="/signUp" exact element={<SignUp />} />
                         </Routes>
                     </div>
                 </div>
