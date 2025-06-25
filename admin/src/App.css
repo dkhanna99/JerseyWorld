@@ -472,3 +472,89 @@ body.light .ratingSection .ratingrow .progress{background: #ccc !important;}
 body.light .reviewsSection .reviewsRow{background: #ededed !important;}
 
 .slick-slide{outline: none !important;}
+
+.form .form-group{margin-bottom: 25px;}
+.form .form-group h6{margin-bottom: 10px; font-size: 13px;}
+.form .form-group input,.form .form-group textarea{background: #fafafa; width: 100%; outline: none !important; border: 1px solid rgba(0,0,0,0.2) !important; height: 55px; padding-left: 15px; border-radius: 5px; font-size: 14px;}
+.form .form-group input:focus{border: 1px solid rgba(0,0,0,0.4) !important;}
+body.dark .form .form-group input:focus{border: 1px solid rgba(255,255,255, 0.1) !important;}
+.form .form-group input:hover,.form .form-group textarea:hover{border: 1px solid rgba(0,0,0,0.3) !important;}
+
+.form .form-group textarea{height: 120px; padding-top: 15px;}
+
+.dot{display:block; width: 20px; height: 20px; border-radius: 100%;}
+.editModal .css-1t1j96h-MuiPaper-root-MuiDialog-paper{width: 600px !important;}
+
+form .form-group h6{font-weight: 600;}
+
+.stickyBox{position: sticky; top: 90px;}
+.stickyBox h4{font-size: 22px;  opacity: 1;}
+
+.imgGrid{width: 100%; flex-wrap: wrap; gap:10px; }
+.imgGrid .img{width: 47%; height: 100px; overflow: hidden; border-radius: 7px;}
+.imgGrid .img img{width: 100%; height:100%; object-fit: cover;}
+
+.inputBtn button{position: absolute; top: 7px; right: 10px; z-index: 100;}
+
+.imgUploadBox{width: 100%; flex-wrap: nowrap; gap: 10px;}
+.imgUploadBox .uploadBox{width: 150px; height: 150px !important; padding: 0px; border-radius: 10px; border: 1px dashed  rgba(0,0,0,0.3); position:relative ; display: flex; align-items: center; justify-content: center; cursor: pointer; background: #fafafa; transition: all 0.3s;}
+
+.imgUploadBox .uploadBox .box{width: 100%; height: 150px !important; overflow: hidden; border-radius: 7px;}
+.imgUploadBox .uploadBox .box .lazy-load-image-background{height: 100% !important; width: 100% !important;}
+
+.imgUploadBox .uploadBox .progressBar .MuiCircularProgress-root{width: 30px !important; height: 30px !important;}
+.imgUploadBox .uploadBox .progressBar span{font-size: 14px;}
+
+.imgUploadBox .uploadBox .remove{position: absolute; top: -7px; right: -7px; display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; background: #d32f2f; border-radius: 50%; cursor: pointer; z-index: 100;}
+
+.imgUploadBox .uploadBox .remove svg{font-size: 18px; color: #fff;}
+
+
+.imgUploadBox .uploadBox .MuiBox-root{position: absolute; }
+
+.imgUploadBox .uploadBox:hover{background: #f1f1f1;}
+
+.imgUploadBox .uploadBox img{height: 100%; object-fit: cover;}
+.imgUploadBox .uploadBox input{position: absolute; width: 100%; height: 100%; opacity: 0;}
+
+.imgUploadBox .uploadBox .info{display: flex; align-items: center;
+  justify-content: center; flex-direction: column; pointer-events: none;}
+.imgUploadBox .uploadBox .info svg{font-size: 50px; opacity: 0.2;}
+.imgUploadBox .uploadBox .info h5{font-size: 15px; text-align: center; opacity: 0.5;}
+
+button.notAllow{cursor: no-drop !important;}
+
+form .btn-blue{position: relative; z-index: 100;}
+
+.btn-blue svg{color: #fff !important;}
+
+.badge{ padding: 4px; font-size: 13px; font-weight: 400;}
+
+button .MuiCircularProgress-root{width: 30px !important; height: 30px !important;}
+body.dark button svg{color: #fff !important;}
+
+.productModal .actions button{opacity:  1 !important;}
+.productModal .actions button svg.text-danger{color: #ed174a  !important; opacity: 1 !important;}
+
+.productModal .MuiPaper-elevation{ padding: 25px; position: relative; max-width: 900px !important; width: 900px !important;}
+
+.productModal h4{font-size: 20px !important; color: rgba(0,0,0,0.8) !important;}
+.close_{position: absolute !important; top: 10px; right: 10px; color: #000 !important; min-width: 40px !important; width: 40px !important; height: 40px !important; border-radius: 50% !important; background: #f1f1f1 !important;}
+
+.close_ svg{font-size: 22px; color: #000 !important; opacity: 0.7;}
+body.dark .close_ svg{font-size: 22px; color: #000 !important; opacity: 0.7;}
+
+.orderTable th,.orderTable td{white-space: nowrap;}
+
+.orderTable .img{width: 70px; height: 40px; overflow: hidden;}
+.orderTable .img img{width: 100%;}
+
+.orderTable td .text-blue{white-space: nowrap !important;}
+
+.btn-big{padding: 10px 25px !important; font-size: 16px !important;}
+.btn-big svg{font-size: 25px !important;}
+
+.cursor{cursor: pointer;}
+
+
+  
