@@ -17,12 +17,14 @@ const productRoutes = require('./routes/products');
 const cartRoutes = require('./routes/cart');
 const orderRoutes = require('./routes/orders');
 const adminRoutes = require('./routes/admin');
+const adminProductRoutes = require('./routes/adminProduct');
 
 app.use(`/api/category`, categoryRoutes);
 app.use(`/api/products`, productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/admin/product', adminProductRoutes);
 
 // Database
 mongoose.connect(process.env.CONNECTION_STRING, {
