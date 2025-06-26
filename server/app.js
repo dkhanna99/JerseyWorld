@@ -9,7 +9,8 @@ const app = express();
 // Middleware
 app.use(cors());
 //app.options("/*", cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 // Routes
 const categoryRoutes = require('./routes/categories');

@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { addToCart } from "../redux/cartSlice.jsx";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { addProductToCart } from "../utils/cartUtils.js";
 
 const ProductCard = ({ product }) => {
     const dispatch = useDispatch();
+    const [isAddingToCart, setIsAddingToCart] = useState(false);
 
     const renderStars = () => {
         const stars = [];
@@ -23,10 +25,30 @@ const ProductCard = ({ product }) => {
         return stars;
     };
 
-    const handleAddToCart = (e, product) => {
+    const handleAddToCart = async (e, product) => {
         e.stopPropagation(); 
         e.preventDefault();
-        dispatch(addToCart(product));
+        
+        if (isAddingToCart) return; // Prevent multiple clicks
+        
+        try {
+            setIsAddingToCart(true);
+            
+            console.log('Adding product to cart:', product.name, 'ID:', product.id);
+            
+            // Add to backend cart
+            const updatedCart = await addProductToCart(product);
+            console.log('Backend cart updated:', updatedCart);
+            
+            // Also add to Redux store for immediate UI update
+            dispatch(addToCart(product));
+            
+        } catch (error) {
+            console.error('Failed to add to cart:', error);
+            // You could show a toast notification here
+        } finally {
+            setIsAddingToCart(false);
+        }
     };
 
     return (
@@ -55,11 +77,17 @@ const ProductCard = ({ product }) => {
 
                     {/* Add to Cart Button */}
                     <div
-                        className="mt-auto flex items-center justify-center w-8 h-8 bg-red-600 group text-white text-sm rounded-full hover:w-32 hover:bg-red-700 transition-all duration-300 overflow-hidden cursor-pointer"
+                        className={`mt-auto flex items-center justify-center w-8 h-8 bg-red-600 group text-white text-sm rounded-full hover:w-32 hover:bg-red-700 transition-all duration-300 overflow-hidden cursor-pointer ${
+                            isAddingToCart ? 'opacity-50 cursor-not-allowed' : ''
+                        }`}
                         onClick={(e) => handleAddToCart(e, product)}
                     >
-                        <span className="group-hover:hidden">+</span>
-                        <span className="hidden group-hover:block">Add to Cart</span>
+                        <span className="group-hover:hidden">
+                            {isAddingToCart ? '...' : '+'}
+                        </span>
+                        <span className="hidden group-hover:block">
+                            {isAddingToCart ? 'Adding...' : 'Add to Cart'}
+                        </span>
                     </div>
                 </div>
             </div>

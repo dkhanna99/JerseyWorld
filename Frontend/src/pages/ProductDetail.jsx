@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { FaCarSide, FaQuestion } from 'react-icons/fa';
-import { fetchProducts } from '../redux/productSlice';
 import { addToCart } from "../redux/cartSlice.jsx";
+import { API_ENDPOINTS } from '../config.js';
 
 const ProductDetail = () => {
     const dispatch = useDispatch();
     const { id } = useParams();
-    const products = useSelector((state) => state.products?.products) || [];
-    const [product, setProduct] = useState();
+    const [product, setProduct] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [quantity, setQuantity] = useState(1);
 
     const handleAddToCart = (e) => {
@@ -20,11 +21,47 @@ const ProductDetail = () => {
     };
 
     useEffect(() => {
-        const newProduct = products.find(product => product.id === parseInt(id));
-        setProduct(newProduct);
-    }, [id, products]);
+        const fetchProduct = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch(`${API_ENDPOINTS.PRODUCTS}/${id}`);
+                
+                if (!response.ok) {
+                    throw new Error('Product not found');
+                }
+                
+                const data = await response.json();
+                
+                // Transform API data to match expected format
+                const transformedProduct = {
+                    id: data._id,
+                    image: data.image && data.image.length > 0 ? data.image[0] : '',
+                    name: data.name,
+                    description: data.description,
+                    price: data.price,
+                    rating: data.rating,
+                    category: data.category ? data.category.name : 'Uncategorized'
+                };
+                
+                setProduct(transformedProduct);
+            } catch (error) {
+                console.error('Error fetching product:', error);
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    if (!product) return <div className="text-center py-20 text-2xl text-black">Loading ....</div>;
+        if (id) {
+            fetchProduct();
+        }
+    }, [id]);
+
+    if (loading) return <div className="text-center py-20 text-2xl text-black">Loading ....</div>;
+    
+    if (error) return <div className="text-center py-20 text-2xl text-black">Error: {error}</div>;
+    
+    if (!product) return <div className="text-center py-20 text-2xl text-black">Product not found</div>;
 
     return (
         <div className="container mx-auto py-60 px-4 md:px-16 lg:px-24 bg-white">

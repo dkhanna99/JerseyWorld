@@ -7,17 +7,48 @@ import InfoSection from "../components/InfoSection.jsx";
 import CategorySection from "../components/CategorySection.jsx";
 import { setProducts} from "../redux/productSlice.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { Categories, mockData} from "../assets/mockData.jsx";
 import ProductCard from "../components/ProductCard.jsx";
 import { Link } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
+import { API_ENDPOINTS } from "../config.js";
+import { initializeCartOnce } from "../utils/cartUtils.js";
+
 const Home = () => {
     
     const dispatch = useDispatch()
     const products = useSelector(state => state.products)
+    
     useEffect(() =>{
-        dispatch(setProducts(mockData))
-    }, [])
+        const initializeData = async () => {
+            try {
+                // Initialize cart only once
+                const cart = await initializeCartOnce();
+                console.log('Cart initialized:', cart);
+                
+                // Fetch products
+                const response = await fetch(API_ENDPOINTS.PRODUCTS);
+                const data = await response.json();
+                
+                // Transform API data to match mockData format
+                const transformedProducts = data.map((product, index) => ({
+                    id: product._id || index + 1,
+                    image: product.image && product.image.length > 0 ? product.image[0] : '',
+                    name: product.name,
+                    description: product.description,
+                    price: product.price,
+                    rating: product.rating,
+                    category: product.category ? product.category.name : 'Uncategorized'
+                }));
+                
+                dispatch(setProducts(transformedProducts));
+            } catch (error) {
+                console.error('Error initializing data:', error);
+            }
+        };
+        
+        initializeData();
+    }, [dispatch])
+
     return (
         <div className="w-full pt-30"> 
             {/* Hero Section 1 */}

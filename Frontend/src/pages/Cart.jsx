@@ -1,20 +1,155 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import {Link, Navigate} from 'react-router-dom';
 import EmptyCart from '../assets/empty-cart.png';
 import { FaTrashAlt } from "react-icons/fa";
 import {removeFromCart, increaseQuantity, decreaseQuantity} from "../redux/cartSlice.jsx";
+import { getCartWithProducts, removeProductFromCart, updateProductQuantity } from "../utils/cartUtils.js";
+
 const Cart = () => {
-    const cart = useSelector((state) => state.cart);
+    const [cartData, setCartData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [address, setAddress] = useState('main street, 0012');
-    const dispatch = useDispatch()
-    /*const handleContinueShopping = () => {
-        navigate('/shop');
-    };*/
+    const [updatingQuantities, setUpdatingQuantities] = useState({});
+    const dispatch = useDispatch();
+
+    // Fetch cart data from backend
+    useEffect(() => {
+        const fetchCartData = async () => {
+            try {
+                setLoading(true);
+                const cart = await getCartWithProducts();
+                setCartData(cart);
+            } catch (error) {
+                console.error('Error fetching cart:', error);
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchCartData();
+    }, []);
+
+    // Handle remove product
+    const handleRemoveProduct = async (productId) => {
+        try {
+            console.log('Removing product with ID:', productId);
+            console.log('Product ID type:', typeof productId);
+            
+            // If productId is an object, extract the actual ID
+            const actualProductId = typeof productId === 'object' ? productId._id || productId.id : productId;
+            console.log('Actual product ID to remove:', actualProductId);
+            
+            await removeProductFromCart(actualProductId);
+            // Refresh cart data
+            const updatedCart = await getCartWithProducts();
+            setCartData(updatedCart);
+            // Also update Redux store
+            dispatch(removeFromCart(actualProductId));
+        } catch (error) {
+            console.error('Error removing product:', error);
+        }
+    };
+
+    // Handle increase quantity
+    const handleIncreaseQuantity = async (productId, currentQuantity) => {
+        try {
+            console.log('Increasing quantity for product:', productId, 'from', currentQuantity, 'to', currentQuantity + 1);
+            
+            // Set loading state for this specific product
+            setUpdatingQuantities(prev => ({ ...prev, [productId]: true }));
+            
+            await updateProductQuantity(productId, currentQuantity + 1);
+            console.log('Backend update completed');
+            
+            // Refresh cart data
+            const updatedCart = await getCartWithProducts();
+            console.log('Fetched updated cart:', updatedCart);
+            setCartData(updatedCart);
+            
+            // Also update Redux store
+            dispatch(increaseQuantity(productId));
+            
+            console.log('UI should now show updated quantity');
+        } catch (error) {
+            console.error('Error increasing quantity:', error);
+        } finally {
+            // Clear loading state
+            setUpdatingQuantities(prev => ({ ...prev, [productId]: false }));
+        }
+    };
+
+    // Handle decrease quantity
+    const handleDecreaseQuantity = async (productId, currentQuantity) => {
+        if (currentQuantity <= 1) {
+            // Remove product if quantity would become 0
+            await handleRemoveProduct(productId);
+            return;
+        }
+        
+        try {
+            console.log('Decreasing quantity for product:', productId, 'from', currentQuantity, 'to', currentQuantity - 1);
+            
+            // Set loading state for this specific product
+            setUpdatingQuantities(prev => ({ ...prev, [productId]: true }));
+            
+            await updateProductQuantity(productId, currentQuantity - 1);
+            console.log('Backend update completed');
+            
+            // Refresh cart data
+            const updatedCart = await getCartWithProducts();
+            console.log('Fetched updated cart:', updatedCart);
+            setCartData(updatedCart);
+            
+            // Also update Redux store
+            dispatch(decreaseQuantity(productId));
+            
+            console.log('UI should now show updated quantity');
+        } catch (error) {
+            console.error('Error decreasing quantity:', error);
+        } finally {
+            // Clear loading state
+            setUpdatingQuantities(prev => ({ ...prev, [productId]: false }));
+        }
+    };
+
+    // Calculate totals
+    const calculateTotals = () => {
+        if (!cartData || !cartData.items) return { totalQuantity: 0, totalPrice: 0 };
+        
+        const totalQuantity = cartData.items.reduce((sum, item) => sum + item.quantity, 0);
+        const totalPrice = cartData.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        
+        return { totalQuantity, totalPrice };
+    };
+
+    const { totalQuantity, totalPrice } = calculateTotals();
+
+    // Debug: Log current cart data
+    console.log('Current cart data for rendering:', cartData);
+    console.log('Cart items:', cartData?.items);
+
+    if (loading) {
+        return (
+            <div className="min-h-[90vh] w-screen flex items-center justify-center bg-white">
+                <div className="text-2xl text-black">Loading cart...</div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-[90vh] w-screen flex items-center justify-center bg-white">
+                <div className="text-2xl text-red-600">Error: {error}</div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-[90vh] w-screen flex items-center justify-center bg-white px-4 py-8">
-            {cart.products.length > 0 ? (
+            {cartData && cartData.items && cartData.items.length > 0 ? (
                 <div className="w-full max-w-6xl">
                     <h3 className="text-2xl font-semibold mb-8 text-center text-black">SHOPPING CART</h3>
 
@@ -34,43 +169,62 @@ const Cart = () => {
                             </div>
 
                             {/* Product Rows */}
-                            {cart.products.map((product) => (
-                                <div key={product.id} className="flex flex-col md:flex-row items-center justify-between border-b pb-6">
-                                    {/* Product Info */}
-                                    <div className="flex items-center space-x-4 w-full md:w-2/5">
-                                        <img
-                                            src={product.image}
-                                            alt={product.name}
-                                            className="w-24 h-24 object-contain rounded"
-                                        />
-                                        <h3 className="text-lg font-semibold text-black">{product.name}</h3>
-                                    </div>
-
-                                    {/* Price | Quantity | Subtotal | Remove */}
-                                    <div className="flex flex-col md:flex-row justify-between items-center w-full md:w-3/5 mt-4 md:mt-0 space-y-4 md:space-y-0">
-                                        <p className="text-black">${product.price}</p>
-
-                                        <div className="flex items-center border rounded overflow-hidden">
-                                            <button className="text-lg font-bold px-3 py-1 bg-black text-white hover:bg-gray-700 border-r"
-                                            onClick={() => dispatch(decreaseQuantity(product.id))}>
-                                                -
-                                            </button>
-                                            <p className="px-4 text-black">{product.quantity}</p>
-                                            <button className="text-lg font-bold px-3 py-1 bg-black text-white hover:bg-gray-700 border-l"
-                                                    onClick={() => dispatch(increaseQuantity(product.id))}>
-                                                +
-                                            </button>
+                            {cartData.items.map((item) => {
+                                // Extract the actual product ID
+                                const actualProductId = typeof item.productId === 'object' ? item.productId._id || item.productId.id : item.productId;
+                                
+                                return (
+                                    <div key={actualProductId} className="flex flex-col md:flex-row items-center justify-between border-b pb-6">
+                                        {/* Product Info */}
+                                        <div className="flex items-center space-x-4 w-full md:w-2/5">
+                                            <img
+                                                src={item.product?.image || ''}
+                                                alt={item.product?.name || 'Product'}
+                                                className="w-24 h-24 object-contain rounded"
+                                            />
+                                            <h3 className="text-lg font-semibold text-black">{item.product?.name || 'Product'}</h3>
                                         </div>
 
-                                        <p className="text-black">${(product.price * product.quantity).toFixed(2)}</p>
+                                        {/* Price | Quantity | Subtotal | Remove */}
+                                        <div className="flex flex-col md:flex-row justify-between items-center w-full md:w-3/5 mt-4 md:mt-0 space-y-4 md:space-y-0">
+                                            <p className="text-black">${item.price}</p>
 
-                                        <button className="text-red-500 hover:text-red-700"
-                                        onClick={() => dispatch(removeFromCart(product.id))}>
-                                            <FaTrashAlt />
-                                        </button>
+                                            <div className="flex items-center border rounded overflow-hidden focus:outline-none">
+                                                <button 
+                                                    className={`text-lg font-bold px-3 py-1 !bg-gray-800 text-white hover:!bg-gray-600 border-r transition-colors duration-200 focus:outline-none ${
+                                                        updatingQuantities[actualProductId] ? 'opacity-50 cursor-not-allowed' : ''
+                                                    }`}
+                                                    onClick={() => handleDecreaseQuantity(actualProductId, item.quantity)}
+                                                    disabled={updatingQuantities[actualProductId]}
+                                                >
+                                                    {updatingQuantities[actualProductId] ? '...' : '-'}
+                                                </button>
+                                                <p className="px-4 text-black bg-white">
+                                                    {updatingQuantities[actualProductId] ? '...' : item.quantity}
+                                                </p>
+                                                <button 
+                                                    className={`text-lg font-bold px-3 py-1 !bg-gray-800 text-white hover:!bg-gray-600 border-l transition-colors duration-200 focus:outline-none ${
+                                                        updatingQuantities[actualProductId] ? 'opacity-50 cursor-not-allowed' : ''
+                                                    }`}
+                                                    onClick={() => handleIncreaseQuantity(actualProductId, item.quantity)}
+                                                    disabled={updatingQuantities[actualProductId]}
+                                                >
+                                                    {updatingQuantities[actualProductId] ? '...' : '+'}
+                                                </button>
+                                            </div>
+
+                                            <p className="text-black">${(item.price * item.quantity).toFixed(2)}</p>
+
+                                            <button 
+                                                className="text-red-500 hover:text-red-700"
+                                                onClick={() => handleRemoveProduct(actualProductId)}
+                                            >
+                                                <FaTrashAlt />
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
 
                         {/* Cart Totals */}
@@ -80,7 +234,7 @@ const Cart = () => {
                             {/* Total Items */}
                             <div className="flex justify-between mb-5 border-b pb-2 text-black">
                                 <span className="text-sm">Total Items:</span>
-                                <span>{cart.totalQuantity}</span>
+                                <span>{totalQuantity}</span>
                             </div>
 
                             {/* Shipping */}
@@ -97,7 +251,7 @@ const Cart = () => {
                             {/* Total Price */}
                             <div className="flex justify-between mb-4 text-black">
                                 <span>Total Price:</span>
-                                <span>${cart.totalPrice.toFixed(2)}</span>
+                                <span>${totalPrice.toFixed(2)}</span>
                             </div>
 
                             {/* Checkout Button */}
