@@ -43,7 +43,7 @@ const ProductDetail = () => {
                 setLoading(false);
             }
         };
-
+      
         fetchProduct();
     }, [id]);
 
@@ -108,47 +108,18 @@ const ProductDetail = () => {
         // Convert hex to color name
         const colorMap = {
             '#000000': 'Black',
-            '#FFFFFF': 'White',
             '#FF0000': 'Red',
-            '#00FF00': 'Green',
             '#0000FF': 'Blue',
             '#FFFF00': 'Yellow',
-            '#FF00FF': 'Magenta',
             '#00FFFF': 'Cyan',
-            '#FFA500': 'Orange',
             '#800080': 'Purple',
             '#FFC0CB': 'Pink',
             '#A52A2A': 'Brown',
             '#808080': 'Gray',
-            '#FFD700': 'Gold',
-            '#C0C0C0': 'Silver',
-            '#8B4513': 'Saddle Brown',
-            '#228B22': 'Forest Green',
-            '#4169E1': 'Royal Blue',
-            '#DC143C': 'Crimson',
-            '#FF6347': 'Tomato',
-            '#32CD32': 'Lime Green',
-            '#FF1493': 'Deep Pink',
-            '#00CED1': 'Dark Turquoise',
-            '#FF4500': 'Orange Red',
-            '#9370DB': 'Medium Purple',
-            '#20B2AA': 'Light Sea Green',
-            '#FF69B4': 'Hot Pink',
-            '#CD853F': 'Peru',
-            '#4682B4': 'Steel Blue',
-            '#DDA0DD': 'Plum',
-            '#F0E68C': 'Khaki',
-            '#98FB98': 'Pale Green',
-            '#87CEEB': 'Sky Blue',
             '#D2691E': 'Chocolate',
-            '#BA55D3': 'Medium Orchid',
-            '#3CB371': 'Medium Sea Green',
             '#FF7F50': 'Coral',
             '#6495ED': 'Cornflower Blue',
             '#DC143C': 'Crimson',
-            '#00BFFF': 'Deep Sky Blue',
-            '#FF8C00': 'Dark Orange',
-            '#8FBC8F': 'Dark Sea Green',
             '#B8860B': 'Dark Goldenrod',
             '#A9A9A9': 'Dark Gray',
             '#006400': 'Dark Green',
@@ -171,12 +142,10 @@ const ProductDetail = () => {
             '#B22222': 'Fire Brick',
             '#FFFAF0': 'Floral White',
             '#228B22': 'Forest Green',
-            '#FF00FF': 'Fuchsia',
             '#DCDCDC': 'Gainsboro',
             '#F8F8FF': 'Ghost White',
             '#FFD700': 'Gold',
             '#DAA520': 'Goldenrod',
-            '#808080': 'Gray',
             '#008000': 'Green',
             '#ADFF2F': 'Green Yellow',
             '#F0FFF0': 'Honeydew',
@@ -203,7 +172,6 @@ const ProductDetail = () => {
             '#B0C4DE': 'Light Steel Blue',
             '#FFFFE0': 'Light Yellow',
             '#00FF00': 'Lime',
-            '#32CD32': 'Lime Green',
             '#FAF0E6': 'Linen',
             '#FF00FF': 'Magenta',
             '#800000': 'Maroon',
@@ -235,11 +203,8 @@ const ProductDetail = () => {
             '#FFEFD5': 'Papaya Whip',
             '#FFDAB9': 'Peach Puff',
             '#CD853F': 'Peru',
-            '#FFC0CB': 'Pink',
             '#DDA0DD': 'Plum',
             '#B0E0E6': 'Powder Blue',
-            '#800080': 'Purple',
-            '#FF0000': 'Red',
             '#BC8F8F': 'Rosy Brown',
             '#4169E1': 'Royal Blue',
             '#8B4513': 'Saddle Brown',
@@ -264,7 +229,6 @@ const ProductDetail = () => {
             '#F5DEB3': 'Wheat',
             '#FFFFFF': 'White',
             '#F5F5F5': 'White Smoke',
-            '#FFFF00': 'Yellow',
             '#9ACD32': 'Yellow Green'
         };
         

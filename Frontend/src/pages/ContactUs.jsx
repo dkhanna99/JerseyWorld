@@ -104,7 +104,7 @@ const ContactUs = () => {
                                     name="name"
                                     value={formData.name}
                                     onChange={handleInputChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-black shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                     placeholder="Your Name"
                                     required
                                 />
@@ -117,7 +117,7 @@ const ContactUs = () => {
                                     name="email"
                                     value={formData.email}
                                     onChange={handleInputChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                    className="w-full px-3 py-2 border border-gray-300 text-black rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                     placeholder="you@example.com"
                                     required
                                 />
@@ -130,7 +130,7 @@ const ContactUs = () => {
                                     value={formData.message}
                                     onChange={handleInputChange}
                                     rows="5"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-black shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                     placeholder="Write your message..."
                                     required
                                 ></textarea>

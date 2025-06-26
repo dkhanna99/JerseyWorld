@@ -38,15 +38,17 @@ router.post('/', async (req, res) => {
 
             let finalPrice = product.basePrice;
             let attributeId = null;
+            let variant = null;
 
-            // If product has variants and variant is specified
+            const itemProductIdStr = typeof item.productId === 'object' ? item.productId._id?.toString() : item.productId?.toString();
+
             if (product.hasVariants && item.attributeId) {
-                const variant = await ProductVariant.findById(item.attributeId);
-                if (variant && variant.productId.toString() === item.productId) {
+                variant = await ProductVariant.findById(item.attributeId);
+                if (variant && variant.productId.toString() === itemProductIdStr) {
                     finalPrice = variant.price;
                     attributeId = variant._id;
                 } else {
-                    throw new Error(`Invalid variant for product: ${item.productId}`);
+                    throw new Error(`Invalid variant for product: ${itemProductIdStr}`);
                 }
             }
 
