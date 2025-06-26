@@ -96,7 +96,15 @@ const cartSlice = createSlice({
 
             saveCartToStorage(state); 
         },
-
+        
+        clearCart: (state) => {
+            state.products = [];
+            state.totalQuantity = 0;
+            state.totalPrice = 0;
+            saveCartToStorage(state);
+            toast.info("Cart cleared after order.");
+        },
+        
         decreaseQuantity: (state, action) => {
             const id = action.payload;
             const foundItem = state.products.find((item) => item.id === id);
@@ -117,5 +125,5 @@ const cartSlice = createSlice({
     },
 });
 
-export const { addToCart, removeFromCart, increaseQuantity, decreaseQuantity } = cartSlice.actions;
+export const { addToCart, removeFromCart, increaseQuantity, decreaseQuantity, clearCart } = cartSlice.actions;
 export default cartSlice.reducer;

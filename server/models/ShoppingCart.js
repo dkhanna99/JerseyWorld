@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 
 const CartItemSchema = new mongoose.Schema({
@@ -9,7 +8,7 @@ const CartItemSchema = new mongoose.Schema({
     },
     attributeId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'ProductAttributePrice', 
+        ref: 'ProductVariant', 
     },
     quantity: {
         type: Number,

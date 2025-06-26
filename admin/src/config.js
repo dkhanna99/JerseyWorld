@@ -7,6 +7,10 @@ export const API_ENDPOINTS = {
     CATEGORIES: `${API_BASE_URL}/api/category`,
     CART: `${API_BASE_URL}/api/cart`,
     CONTACT: `${API_BASE_URL}/api/contact`,
+    ORDERS: `${API_BASE_URL}/api/orders`,
+    ADMIN_CARTS: `${API_BASE_URL}/api/admin/carts`,
+    ADMIN_ORDERS: `${API_BASE_URL}/api/admin/orders`,
+    ADMIN_DASHBOARD: `${API_BASE_URL}/api/admin/dashboard`,
     // Add other endpoints here as needed
     // USERS: `${API_BASE_URL}/api/users`,
 };

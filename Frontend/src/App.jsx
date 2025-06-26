@@ -17,6 +17,8 @@ import { setProducts } from './redux/productSlice.jsx';
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Checkout from "./pages/Checkout.jsx";
+import ThankYou from "./pages/ThankYou.jsx";
 
 function App() {
     const dispatch = useDispatch();
@@ -41,6 +43,8 @@ function App() {
                         <Route path="/aboutus" element={<AboutUs />} />
                         <Route path="/contactus" element={<ContactUs />} />
                         <Route path="/product/:id" element={<ProductDetail />} />
+                        <Route path="/checkout" element={<Checkout />} />
+                        <Route path="/thank-you" element={<ThankYou />} />
                     </Routes>
                 </main>
                 <Footer />

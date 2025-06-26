@@ -1,5 +1,5 @@
 import './App.css';
-import {BrowserRouter, Routes, Route} from "react-router-dom";
+import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Header from "./components/Header";
@@ -10,7 +10,9 @@ import SignUp from "./pages/SignUp";
 import ProductDetails from "./pages/ProductDetails";
 import Products from "./pages/Products";
 import ProductUpload from "./pages/ProductUpload";
+import ProtectedRoute from "./components/ProtectedRoute";
 import ContactMessages from "./pages/ContactMessages";
+import Orders from "./pages/Orders";
 
 const MyContext = createContext();
 
@@ -25,9 +27,7 @@ function App() {
         setIsHideSidebarAndHeader
     };
     
-  
-    
-      return (
+    return (
         <MyContext.Provider value={values}>
             <BrowserRouter>
                 {
@@ -44,14 +44,20 @@ function App() {
 
                     <div className={`content ${isHideSidebarAndHeader === true && 'full'}`}>
                         <Routes>
-                            <Route path="/" exact element={<Dashboard />} />
-                            <Route path="/dashboard" exact element={<Dashboard />} />
-                            <Route path="/login" exact element={<Login />} />
-                            <Route path="/signUp" exact element={<SignUp />} />
-                            <Route path="/products" exact element={<Products />} />
-                            <Route path="/product/details" exact element={<ProductDetails />} />
-                            <Route path="/product/upload" exact element={<ProductUpload />} />
-                            <Route path="/contact-messages" exact element={<ContactMessages />} />
+                            {/* Public Routes */}
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/signUp" element={<SignUp />} />
+                            
+                            {/* Protected Routes */}
+                            <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                            <Route path="/products" element={<ProtectedRoute><Products /></ProtectedRoute>} />
+                            <Route path="/product/details" element={<ProtectedRoute><ProductDetails /></ProtectedRoute>} />
+                            <Route path="/product/upload" element={<ProtectedRoute><ProductUpload /></ProtectedRoute>} />
+                            <Route path="/contact-messages" element={<ProtectedRoute><ContactMessages /></ProtectedRoute>} />
+                            <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+                            
+                            {/* Catch all route */}
+                            <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>
                     </div>
                 </div>

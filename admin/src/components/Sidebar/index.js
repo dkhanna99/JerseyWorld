@@ -4,8 +4,8 @@ import { FaAngleRight } from "react-icons/fa6";
 import { GiBasketballJersey } from "react-icons/gi";
 import { TbShoppingCartBolt } from "react-icons/tb";
 import { LuMessagesSquare } from "react-icons/lu";
-import {IoMdLogOut, IoMdNotifications, IoMdSettings} from "react-icons/io";
-import { Link } from "react-router-dom";
+import {IoMdLogOut} from "react-icons/io";
+import {Link, Navigate, useNavigate} from "react-router-dom";
 import {useState} from "react";
 
 
@@ -13,7 +13,7 @@ const Sidebar = () => {
 
     const [activeTab, setActiveTab] = useState(0);
     const [isToggleSubmenu, setIsToggleSubmenu] = useState(false);
-    
+    const navigate = useNavigate();
 
     const isOpenSubmenu = (index) => {
         setActiveTab(index);
@@ -25,6 +25,12 @@ const Sidebar = () => {
         }
 
     };
+
+    const handleLogout = () => {
+        localStorage.removeItem('isAdminAuthenticated');
+        navigate('/login');
+    };
+    
     return (
     <div className="sidebar">
         <ul>
@@ -84,49 +90,31 @@ const Sidebar = () => {
                 </div>
             </li>
             <li>
-                <Link to="/">
                 <Button
-                    className={`w-100 ${activeTab === 3 ? "active" : ""}`}
-                    onClick={()=>isOpenSubmenu(3)}>
+                    className={`w-100 ${activeTab === 3 && isToggleSubmenu === true ? "active" : ""}`}
+                        onClick={()=>isOpenSubmenu(3)}>
                     <span className="icon"><TbShoppingCartBolt /></span>
-                    Orders
+                    Orders & Carts
                     <span className="arrow">
                 <FaAngleRight />
               </span>
                 </Button>
-                </Link>
-            </li>
-            <li>
-                <Link to="/">
-                <Button
-                    className={`w-100 ${activeTab === 4 ? "active" : ""}`}
-                    onClick={()=>isOpenSubmenu(4)}>
-                    <span className="icon"><IoMdNotifications /></span>
-                    Notifications
-                    <span className="arrow">
-                <FaAngleRight />
-              </span>
-                </Button>
-                </Link>
-            </li>
-            <li>
-                <Link to="/">
-                <Button
-                    className={`w-100 ${activeTab === 5 ? "active" : ""}`}
-                    onClick={()=>isOpenSubmenu(5)}>
-                    <span className="icon"><IoMdSettings /></span>
-                    Settings
-                    <span className="arrow">
-                <FaAngleRight />
-              </span>
-                </Button>
-                </Link>
+                <div className={`submenuWrapper ${
+                    activeTab === 3 && isToggleSubmenu === true
+                        ? "colapse"
+                        : "colapsed"
+                }`}>
+                <ul className="submenu">
+                    <li><Link to="/orders?section=orders">All Orders</Link></li>
+                    <li><Link to="/orders?section=carts">Active Carts</Link></li>
+                </ul>
+                </div>
             </li>
         </ul>
 
         <div className="logoutWrapper">
             <div className="logoutBox">
-                <Button variant="contained">
+                <Button variant="contained" onClick={handleLogout}>
                     <IoMdLogOut /> Logout
                 </Button>
             </div>

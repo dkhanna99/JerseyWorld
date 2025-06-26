@@ -35,7 +35,7 @@ const Home = () => {
                     image: product.image && product.image.length > 0 ? product.image[0] : '',
                     name: product.name,
                     description: product.description,
-                    price: product.price,
+                    price: product.basePrice,
                     rating: product.rating,
                     category: product.category ? product.category.name : 'Uncategorized'
                 }));
