@@ -1,20 +1,19 @@
+import React, { useState } from "react";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import HomeIcon from "@mui/icons-material/Home";
-import React, {useState} from "react";
-import {emphasize, styled} from "@mui/material/styles";
+import { emphasize, styled } from "@mui/material/styles";
 import Chip from "@mui/material/Chip";
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormHelperText from '@mui/material/FormHelperText';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import Rating from '@mui/material/Rating';
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import Rating from "@mui/material/Rating";
 import Button from "@mui/material/Button";
-import {FaCloudUploadAlt} from "react-icons/fa";
-import {IoCloseSharp} from "react-icons/io5";
-import {FaRegImages} from "react-icons/fa6";
+import { FaCloudUploadAlt } from "react-icons/fa";
+import { IoCloseSharp } from "react-icons/io5";
+import { FaRegImages } from "react-icons/fa6";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import "react-lazy-load-image-component/src/effects/blur.css";
+import InputLabel from "@mui/material/InputLabel";
+import {Checkbox, FormControlLabel} from "@mui/material";
 
 //breadcrumb code
 const StyledBreadcrumb = styled(Chip)(({theme}) => {
@@ -127,6 +126,20 @@ const ProductUpload = () => {
                                                 onChange={(event, newValue) => {
                                                     setRatingValue(newValue);
                                                 }}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col">
+                                        <div className="form-group d-flex align-items-center mt-3">
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        
+                                                        name="bestseller"
+                                                        color="primary"
+                                                    />
+                                                }
+                                                label="BEST-SELLER?"
                                             />
                                         </div>
                                     </div>

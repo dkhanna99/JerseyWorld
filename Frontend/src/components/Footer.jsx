@@ -44,7 +44,7 @@ const Footer = () => {
                         </li>
                         <li>
                             <Link
-                                to="/about"
+                                to="/aboutus"
                                 style={{ color: 'inherit', textDecoration: 'none' }}
                                 className="hover:text-white  transition-colors duration-300"
                             >
@@ -53,7 +53,7 @@ const Footer = () => {
                         </li>
                         <li>
                             <Link
-                                to="/contact"
+                                to="/contactus"
                                 style={{ color: 'inherit', textDecoration: 'none' }}
                                 className="hover:text-white  transition-colors duration-300"
                             >
