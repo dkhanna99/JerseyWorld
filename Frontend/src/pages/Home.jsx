@@ -37,7 +37,11 @@ const Home = () => {
                     description: product.description,
                     price: product.basePrice,
                     rating: product.rating,
-                    category: product.category ? product.category.name : 'Uncategorized'
+                    category: product.category ? product.category.name : 'Uncategorized',
+                    hasVariants: product.hasVariants || false,
+                    variants: product.variants || [],
+                    availableColors: product.availableColors || [],
+                    availableSizes: product.availableSizes || []
                 }));
                 
                 dispatch(setProducts(transformedProducts));

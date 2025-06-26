@@ -58,6 +58,17 @@ const Checkout = () => {
                 phone: customer.phone,
             });
 
+            // Clear the backend cart
+            const cartId = localStorage.getItem('cartId');
+            if (cartId) {
+                try {
+                    await axios.delete(`http://localhost:4000/api/cart/${cartId}`);
+                    console.log('Backend cart cleared successfully');
+                } catch (cartError) {
+                    console.error('Error clearing backend cart:', cartError);
+                }
+            }
+
             navigate('/thank-you', {state: {orderNumber: res.data.orderNumber}});
             dispatch(clearCart()); 
             localStorage.removeItem('cartId'); 
@@ -71,8 +82,8 @@ const Checkout = () => {
     if (loading) return <div className="p-8 text-xl">Loading checkout...</div>;
 
     return (
-        <div className="max-w-4xl mx-auto py-8 px-4 space-y-30">
-            <h2 className="text-3xl font-bold text-center text-black">Checkout</h2>
+        <div style={{'margin-top':'150px'}} className="max-w-4xl mx-auto py-8 px-4 space-y-30">
+            <h2 className="text-3xl font-bold text-center text-black mb-2">Checkout</h2>
 
             {/* Section 1: Customer Details */}
             <div className="space-y-4 border p-6 rounded-lg shadow mb-8">

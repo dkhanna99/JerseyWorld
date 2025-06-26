@@ -8,11 +8,39 @@ const pLimit = require('p-limit');
 
 // GET: Fetch all products
 router.get('/', async (req, res) => {
-    const productList = await Product.find().populate("category");
-    if (!productList) {
-        return res.status(500).json({ success: false });
+    try {
+        const productList = await Product.find().populate("category");
+        if (!productList) {
+            return res.status(500).json({ success: false });
+        }
+
+        // Fetch variants for products that have them
+        const productsWithVariants = await Promise.all(
+            productList.map(async (product) => {
+                const productObj = product.toObject();
+                
+                if (productObj.hasVariants) {
+                    console.log(`Fetching variants for product: ${productObj.name} (ID: ${productObj._id})`);
+                    const variants = await ProductVariant.find({ 
+                        productId: productObj._id
+                        // Temporarily removed isActive filter to debug
+                    });
+                    console.log(`Found ${variants.length} variants for product: ${productObj.name}`);
+                    return {
+                        ...productObj,
+                        variants: variants
+                    };
+                }
+                
+                return productObj;
+            })
+        );
+
+        res.send(productsWithVariants);
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        res.status(500).json({ success: false, error: error.message });
     }
-    res.send(productList);
 });
 
 // GET: Search products with AND logic
@@ -41,7 +69,21 @@ router.get('/search', async (req, res) => {
             return terms.every(term => combinedText.includes(term));
         });
 
-        res.json(results);
+        // Add variants to products that have them
+        const resultsWithVariants = results.map(product => {
+            if (product.hasVariants) {
+                const productVariants = variants.filter(v => 
+                    v.productId.toString() === product._id.toString()
+                );
+                return {
+                    ...product,
+                    variants: productVariants
+                };
+            }
+            return product;
+        });
+
+        res.json(resultsWithVariants);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -59,8 +101,8 @@ router.get('/:id', async (req, res) => {
         let variants = [];
         if (product.hasVariants) {
             variants = await ProductVariant.find({ 
-                productId: req.params.id,
-                isActive: true 
+                productId: req.params.id
+                // Temporarily removed isActive filter to debug
             });
         }
 

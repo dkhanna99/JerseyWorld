@@ -33,35 +33,36 @@ const Cart = () => {
     }, []);
 
     // Handle remove product
-    const handleRemoveProduct = async (productId) => {
+    const handleRemoveProduct = async (productId, attributeId = null) => {
         try {
-            console.log('Removing product with ID:', productId);
+            console.log('Removing product with ID:', productId, 'and attributeId:', attributeId);
             console.log('Product ID type:', typeof productId);
             
             // If productId is an object, extract the actual ID
             const actualProductId = typeof productId === 'object' ? productId._id || productId.id : productId;
             console.log('Actual product ID to remove:', actualProductId);
             
-            await removeProductFromCart(actualProductId);
+            await removeProductFromCart(actualProductId, attributeId);
             // Refresh cart data
             const updatedCart = await getCartWithProducts();
             setCartData(updatedCart);
-            // Also update Redux store
-            dispatch(removeFromCart(actualProductId));
+            // Also update Redux store with variant info
+            dispatch(removeFromCart({ id: actualProductId, attributeId }));
         } catch (error) {
             console.error('Error removing product:', error);
         }
     };
 
     // Handle increase quantity
-    const handleIncreaseQuantity = async (productId, currentQuantity) => {
+    const handleIncreaseQuantity = async (productId, currentQuantity, attributeId = null) => {
         try {
             console.log('Increasing quantity for product:', productId, 'from', currentQuantity, 'to', currentQuantity + 1);
             
             // Set loading state for this specific product
-            setUpdatingQuantities(prev => ({ ...prev, [productId]: true }));
+            const itemKey = attributeId ? `${productId}_${attributeId}` : productId;
+            setUpdatingQuantities(prev => ({ ...prev, [itemKey]: true }));
             
-            await updateProductQuantity(productId, currentQuantity + 1);
+            await updateProductQuantity(productId, currentQuantity + 1, attributeId);
             console.log('Backend update completed');
             
             // Refresh cart data
@@ -69,23 +70,24 @@ const Cart = () => {
             console.log('Fetched updated cart:', updatedCart);
             setCartData(updatedCart);
             
-            // Also update Redux store
-            dispatch(increaseQuantity(productId));
+            // Also update Redux store with variant info
+            dispatch(increaseQuantity({ id: productId, attributeId }));
             
             console.log('UI should now show updated quantity');
         } catch (error) {
             console.error('Error increasing quantity:', error);
         } finally {
             // Clear loading state
-            setUpdatingQuantities(prev => ({ ...prev, [productId]: false }));
+            const itemKey = attributeId ? `${productId}_${attributeId}` : productId;
+            setUpdatingQuantities(prev => ({ ...prev, [itemKey]: false }));
         }
     };
 
     // Handle decrease quantity
-    const handleDecreaseQuantity = async (productId, currentQuantity) => {
+    const handleDecreaseQuantity = async (productId, currentQuantity, attributeId = null) => {
         if (currentQuantity <= 1) {
             // Remove product if quantity would become 0
-            await handleRemoveProduct(productId);
+            await handleRemoveProduct(productId, attributeId);
             return;
         }
         
@@ -93,9 +95,10 @@ const Cart = () => {
             console.log('Decreasing quantity for product:', productId, 'from', currentQuantity, 'to', currentQuantity - 1);
             
             // Set loading state for this specific product
-            setUpdatingQuantities(prev => ({ ...prev, [productId]: true }));
+            const itemKey = attributeId ? `${productId}_${attributeId}` : productId;
+            setUpdatingQuantities(prev => ({ ...prev, [itemKey]: true }));
             
-            await updateProductQuantity(productId, currentQuantity - 1);
+            await updateProductQuantity(productId, currentQuantity - 1, attributeId);
             console.log('Backend update completed');
             
             // Refresh cart data
@@ -103,15 +106,16 @@ const Cart = () => {
             console.log('Fetched updated cart:', updatedCart);
             setCartData(updatedCart);
             
-            // Also update Redux store
-            dispatch(decreaseQuantity(productId));
+            // Also update Redux store with variant info
+            dispatch(decreaseQuantity({ id: productId, attributeId }));
             
             console.log('UI should now show updated quantity');
         } catch (error) {
             console.error('Error decreasing quantity:', error);
         } finally {
             // Clear loading state
-            setUpdatingQuantities(prev => ({ ...prev, [productId]: false }));
+            const itemKey = attributeId ? `${productId}_${attributeId}` : productId;
+            setUpdatingQuantities(prev => ({ ...prev, [itemKey]: false }));
         }
     };
 
@@ -172,9 +176,11 @@ const Cart = () => {
                             {cartData.items.map((item) => {
                                 // Extract the actual product ID
                                 const actualProductId = typeof item.productId === 'object' ? item.productId._id || item.productId.id : item.productId;
+                                // Create unique key for loading state
+                                const itemKey = item.attributeId ? `${actualProductId}_${item.attributeId}` : actualProductId;
                                 
                                 return (
-                                    <div key={actualProductId} className="flex flex-col md:flex-row items-center justify-between border-b pb-6">
+                                    <div key={itemKey} className="flex flex-col md:flex-row items-center justify-between border-b pb-6">
                                         {/* Product Info */}
                                         <div className="flex items-center space-x-4 w-full md:w-2/5">
                                             <img
@@ -182,7 +188,20 @@ const Cart = () => {
                                                 alt={item.product?.name || 'Product'}
                                                 className="w-24 h-24 object-contain rounded"
                                             />
-                                            <h3 className="text-lg font-semibold text-black">{item.product?.name || 'Product'}</h3>
+                                            <div>
+                                                <h3 className="text-lg font-semibold text-black">{item.product?.name || 'Product'}</h3>
+                                                {/* Show variant information if available */}
+                                                {item.attributeId && (
+                                                    <div className="text-sm text-gray-600 mt-1">
+                                                        <span className="mr-2">
+                                                            Color: {item.attributeId.color}
+                                                        </span>
+                                                        <span>
+                                                            Size: {item.attributeId.size}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
 
                                         {/* Price | Quantity | Subtotal | Remove */}
@@ -192,24 +211,24 @@ const Cart = () => {
                                             <div className="flex items-center border rounded overflow-hidden focus:outline-none">
                                                 <button 
                                                     className={`text-lg font-bold px-3 py-1 !bg-gray-800 text-white hover:!bg-gray-600 border-r transition-colors duration-200 focus:outline-none ${
-                                                        updatingQuantities[actualProductId] ? 'opacity-50 cursor-not-allowed' : ''
+                                                        updatingQuantities[itemKey] ? 'opacity-50 cursor-not-allowed' : ''
                                                     }`}
-                                                    onClick={() => handleDecreaseQuantity(actualProductId, item.quantity)}
-                                                    disabled={updatingQuantities[actualProductId]}
+                                                    onClick={() => handleDecreaseQuantity(actualProductId, item.quantity, item.attributeId)}
+                                                    disabled={updatingQuantities[itemKey]}
                                                 >
-                                                    {updatingQuantities[actualProductId] ? '...' : '-'}
+                                                    {updatingQuantities[itemKey] ? '...' : '-'}
                                                 </button>
                                                 <p className="px-4 text-black bg-white">
-                                                    {updatingQuantities[actualProductId] ? '...' : item.quantity}
+                                                    {updatingQuantities[itemKey] ? '...' : item.quantity}
                                                 </p>
                                                 <button 
                                                     className={`text-lg font-bold px-3 py-1 !bg-gray-800 text-white hover:!bg-gray-600 border-l transition-colors duration-200 focus:outline-none ${
-                                                        updatingQuantities[actualProductId] ? 'opacity-50 cursor-not-allowed' : ''
+                                                        updatingQuantities[itemKey] ? 'opacity-50 cursor-not-allowed' : ''
                                                     }`}
-                                                    onClick={() => handleIncreaseQuantity(actualProductId, item.quantity)}
-                                                    disabled={updatingQuantities[actualProductId]}
+                                                    onClick={() => handleIncreaseQuantity(actualProductId, item.quantity, item.attributeId)}
+                                                    disabled={updatingQuantities[itemKey]}
                                                 >
-                                                    {updatingQuantities[actualProductId] ? '...' : '+'}
+                                                    {updatingQuantities[itemKey] ? '...' : '+'}
                                                 </button>
                                             </div>
 
@@ -217,7 +236,7 @@ const Cart = () => {
 
                                             <button 
                                                 className="text-red-500 hover:text-red-700"
-                                                onClick={() => handleRemoveProduct(actualProductId)}
+                                                onClick={() => handleRemoveProduct(actualProductId, item.attributeId)}
                                             >
                                                 <FaTrashAlt />
                                             </button>

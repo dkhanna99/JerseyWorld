@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { mockData } from "../assets/mockData.jsx";
+
 const initialState = {
     products: [],
     searchTerm: '',
@@ -22,8 +22,5 @@ const productSlice = createSlice({
     }
 })
 
-export const fetchProducts = () => async (dispatch) => {
-    dispatch(setProducts(mockData));
-};
 export const { setProducts, setSearchTerm } = productSlice.actions;
 export default productSlice.reducer;
