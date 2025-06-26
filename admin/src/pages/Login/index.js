@@ -5,10 +5,15 @@ import pattern from '../../assets/pattern.webp';
 import {MdEmail} from "react-icons/md";
 import {RiLockPasswordFill} from "react-icons/ri";
 import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import googleIcon from "../../assets/googleIcon.png";
 
 const Login = () => {
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
     
     const [inputIndex, setInputIndex] = useState(null);
     const context = useContext(MyContext);
@@ -20,6 +25,18 @@ const Login = () => {
     const focusInput = (index) => {
         setInputIndex(index);
     }
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+
+        if (email === 'admin@jerseyworld.com' && password === 'jerseyworld99') {
+            localStorage.setItem('isAdminAuthenticated', 'true');
+            context.setIsLogin(true);
+            navigate('/');
+        } else {
+            setError('Invalid credentials');
+        }
+    };
     
     return (
         <>
@@ -32,10 +49,11 @@ const Login = () => {
                 </div>
                 
                 <div className="wrapper mt-3 card border p-4">
-                    <form>
+                    <form onSubmit={handleLogin}>
                         <div className={`form-group mb-3 position-relative ${inputIndex === 0 && 'focus' }`}>
                             <span className="icon"><MdEmail /></span>
-                            <input type="email" className="form-control" id="email" placeholder="Enter your Email" 
+                            <input type="email" className="form-control" id="email" placeholder="Enter your Email"
+                                   onChange={(e) => setEmail(e.target.value)}
                             onFocus={()=>{
                                 focusInput(0);
                             } }
@@ -45,14 +63,17 @@ const Login = () => {
                         <div className={`form-group mb-3 position-relative ${inputIndex === 1 && 'focus' }`}>
                             <span className="icon"><RiLockPasswordFill /></span>
                             <input type="password" className="form-control" id="password" placeholder="Enter your password"
+                                   onChange={(e) => setPassword(e.target.value)}
                                    onFocus={()=>{
                                        focusInput(1);
                                    } }
                                    onBlur={()=>setInputIndex(null)}/>
-                        </div> 
+                        </div>
+
+                        {error && <p className="text-sm text-danger mb-2">{error}</p>}
                         
                         <div className="form-group">
-                            <Button className="btn-lg btn-blue w-100">Sign In</Button>
+                            <Button  type="submit" className="btn-lg btn-blue w-100">Sign In</Button>
                         </div>
 
                         <div className="form-group text-center mb-0">

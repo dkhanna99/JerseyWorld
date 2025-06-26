@@ -60,6 +60,15 @@ const Footer = () => {
                                 Contact
                             </Link>
                         </li>
+                    <li>
+                        <Link
+                            to="http://localhost:3000/login"
+                            style={{ color: 'inherit', textDecoration: 'none' }}
+                            className="hover:text-white transition-colors duration-300"
+                        >
+                            Admin Login
+                        </Link>
+                    </li>
                     </ul>
                 </div>
 

@@ -5,7 +5,7 @@ import { GiBasketballJersey } from "react-icons/gi";
 import { TbShoppingCartBolt } from "react-icons/tb";
 import { LuMessagesSquare } from "react-icons/lu";
 import {IoMdLogOut, IoMdNotifications, IoMdSettings} from "react-icons/io";
-import { Link } from "react-router-dom";
+import {Link, Navigate, useNavigate} from "react-router-dom";
 import {useState} from "react";
 
 
@@ -13,7 +13,7 @@ const Sidebar = () => {
 
     const [activeTab, setActiveTab] = useState(0);
     const [isToggleSubmenu, setIsToggleSubmenu] = useState(false);
-    
+    const navigate = useNavigate();
 
     const isOpenSubmenu = (index) => {
         setActiveTab(index);
@@ -25,6 +25,12 @@ const Sidebar = () => {
         }
 
     };
+
+    const handleLogout = () => {
+        localStorage.removeItem('isAdminAuthenticated');
+        navigate('/login');
+    };
+    
     return (
     <div className="sidebar">
         <ul>
@@ -119,7 +125,7 @@ const Sidebar = () => {
 
         <div className="logoutWrapper">
             <div className="logoutBox">
-                <Button variant="contained">
+                <Button variant="contained" onClick={handleLogout}>
                     <IoMdLogOut /> Logout
                 </Button>
             </div>
