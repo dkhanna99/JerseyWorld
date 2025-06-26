@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { emphasize, styled } from '@mui/material/styles';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Chip from '@mui/material/Chip';
@@ -9,6 +10,7 @@ import {MdCategory, MdFilterVintage, MdOutlineSportsSoccer} from "react-icons/md
 import {IoStarSharp} from "react-icons/io5";
 import {IoIosPricetags} from "react-icons/io";
 import Divider from "@mui/material/Divider";
+import { API_ENDPOINTS } from "../../config";
 
 //breadcrumb code
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
@@ -31,7 +33,43 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     };
 });
 
-const ProductDetails  = () =>{
+const ProductDetails = () => {
+    const [searchParams] = useSearchParams();
+    const [product, setProduct] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const productId = searchParams.get('id');
+
+    // Fetch product details from API
+    useEffect(() => {
+        const fetchProductDetails = async () => {
+            if (!productId) {
+                setError('No product ID provided');
+                setLoading(false);
+                return;
+            }
+
+            try {
+                setLoading(true);
+                const response = await fetch(`${API_ENDPOINTS.PRODUCTS}/${productId}`);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch product details');
+                }
+                
+                const data = await response.json();
+                setProduct(data);
+            } catch (error) {
+                console.error('Error fetching product details:', error);
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProductDetails();
+    }, [productId]);
 
     var productSliderOptions = {
         dots: false,
@@ -50,6 +88,28 @@ const ProductDetails  = () =>{
         slidesToScroll: 1,
         arrows: false,
     };
+
+    if (loading) {
+        return (
+            <div className="right-content w-100">
+                <div className="d-flex justify-content-center align-items-center" style={{ height: '400px' }}>
+                    <div className="spinner-border text-primary" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (error || !product) {
+        return (
+            <div className="right-content w-100">
+                <div className="alert alert-danger m-4" role="alert">
+                    Error: {error || 'Product not found'}
+                </div>
+            </div>
+        );
+    }
     
     return (
         <>
@@ -71,7 +131,6 @@ const ProductDetails  = () =>{
                         />
                         <StyledBreadcrumb
                             label="Product View"
-
                         />
                     </Breadcrumbs>
                 </div>
@@ -81,91 +140,66 @@ const ProductDetails  = () =>{
                         <div className="col-md-4">
                             <div className="sliderWrapper p-5">
                                 <h6 className="mb-3">Product Gallery</h6>
-                                <Slider {...productSliderOptions} className="sliderBig mb-2" >
-                                    <div className="item">
-                                        <img src="https://store.fcbarcelona.com/cdn/shop/files/251100B_1_bbfaed15-891d-4a6d-9ff1-efffaf45ac5f.jpg?v=1730384805&width=1400" className="w-100"/>
-
+                                {product.image && product.image.length > 0 ? (
+                                    <>
+                                        <Slider {...productSliderOptions} className="sliderBig mb-2" >
+                                            {product.image.map((image, index) => (
+                                                <div key={index} className="item">
+                                                    <img src={image} className="w-100" alt={`${product.name} - Image ${index + 1}`} />
+                                                </div>
+                                            ))}
+                                        </Slider>
+                                        {product.image.length > 1 && (
+                                            <Slider {...productSliderSmlOptions} className="sliderSml" >
+                                                {product.image.map((image, index) => (
+                                                    <div key={index} className="item">
+                                                        <img src={image} className="w-100" alt={`${product.name} - Thumbnail ${index + 1}`} />
+                                                    </div>
+                                                ))}
+                                            </Slider>
+                                        )}
+                                    </>
+                                ) : (
+                                    <div className="text-center py-5">
+                                        <p className="text-muted">No images available</p>
                                     </div>
-                                </Slider>
-                                <Slider {...productSliderSmlOptions} className="sliderSml" >
-                                    <div className="item">
-                                        <img src="https://store.fcbarcelona.com/cdn/shop/files/251100B_1_bbfaed15-891d-4a6d-9ff1-efffaf45ac5f.jpg?v=1730384805&width=1400" className="w-100"/>
-                                    </div>
-                                    <div className="item">
-                                        <img src="https://store.fcbarcelona.com/cdn/shop/files/251100B_1_bbfaed15-891d-4a6d-9ff1-efffaf45ac5f.jpg?v=1730384805&width=1400" className="w-100"/>
-
-                                    </div>
-                                    <div className="item">
-                                        <img src="https://store.fcbarcelona.com/cdn/shop/files/251100B_1_bbfaed15-891d-4a6d-9ff1-efffaf45ac5f.jpg?v=1730384805&width=1400" className="w-100"/>
-
-                                    </div>
-                                    <div className="item">
-                                        <img src="https://store.fcbarcelona.com/cdn/shop/files/251100B_1_bbfaed15-891d-4a6d-9ff1-efffaf45ac5f.jpg?v=1730384805&width=1400" className="w-100"/>
-
-                                    </div>
-                                    <div className="item">
-                                        <img src="https://store.fcbarcelona.com/cdn/shop/files/251100B_1_bbfaed15-891d-4a6d-9ff1-efffaf45ac5f.jpg?v=1730384805&width=1400" className="w-100"/>
-
-                                    </div>
-
-                                </Slider>
+                                )}
                             </div>
                         </div>
 
                         <div className="col-md-7">
                             <div className="p-5">
-                            <h6 className="mb-3">Product Details</h6>
+                                <h6 className="mb-3">Product Details</h6>
                                 
-                                <h4>2024/2025 Barcelona Home</h4>
+                                <h4>{product.name}</h4>
                                 
                                 <div className="productInfo mt-3">
                                     <div className="row">
                                         <div className="col-sm-5 d-flex align-items-center">
                                             <span className="icon "><MdOutlineSportsSoccer /></span>
-                                            <span className="name">Team</span>
-                                            
+                                            <span className="name">Product ID</span>
                                         </div>
                                         <div className="col-sm-7">
-                                            <span>F.C. Barcelona</span>
+                                            <span>{product._id}</span>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-sm-5 d-flex align-items-center">
                                             <span className="icon "><MdCategory /></span>
                                             <span className="name">Category</span>
-
                                         </div>
                                         <div className="col-sm-7">
-                                            <span>Clubs</span>
+                                            <span>{product.category ? product.category.name : 'Uncategorized'}</span>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-sm-5 d-flex align-items-center">
                                             <span className="icon"><MdFilterVintage /></span>
-                                            <span className="name">Size</span>
+                                            <span className="name">Featured</span>
                                         </div>
                                         <div className="col-sm-7">
-                                            <span>
-                                                <ul className="list list-inline tags sml">
-                                                    <li className="list-inline-item">
-                                                        <span>XS</span>
-                                                    </li>
-                                                    <li className="list-inline-item">
-                                                        <span>S</span>
-                                                    </li>
-                                                    <li className="list-inline-item">
-                                                        <span>M</span>
-                                                    </li>
-                                                    <li className="list-inline-item">
-                                                        <span>L</span>
-                                                    </li>
-                                                    <li className="list-inline-item">
-                                                        <span>XL</span>
-                                                    </li>
-                                                    <li className="list-inline-item">
-                                                        <span>XXL</span>
-                                                    </li>
-                                                </ul>
+                                            <span className={`badge ${product.isFeatured ? 'bg-success' : 'bg-secondary'}`}>
+                                                {product.isFeatured ? 'Yes' : 'No'}
                                             </span>
                                         </div>
                                     </div>
@@ -173,36 +207,31 @@ const ProductDetails  = () =>{
                                         <div className="col-sm-5 d-flex align-items-center">
                                             <span className="icon "><IoStarSharp /></span>
                                             <span className="name">Ratings</span>
-
                                         </div>
                                         <div className="col-sm-7">
-                                            <span>5 / 5</span>
+                                            <span>{product.rating || 0} / 5</span>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-sm-5 d-flex align-items-center">
                                             <span className="icon "><IoIosPricetags /></span>
                                             <span className="name">Price</span>
-
                                         </div>
                                         <div className="col-sm-7">
-                                            <span>$ 129</span>
+                                            <span>$ {product.price}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <br/> <br/>
                                 <h4 className="mt-4">Product Description</h4> 
-                                <p>Product Mock Description </p>
+                                <p>{product.description || 'No description available'}</p>
                             </div>
                         </div>
                     </div>
-                    
                 </div>
-                
             </div>
-            
         </>
-    )
-}
+    );
+};
 
 export default ProductDetails;

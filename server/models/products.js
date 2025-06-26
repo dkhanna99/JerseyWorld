@@ -15,7 +15,7 @@ const productSchema = mongoose.Schema({
         required: true,
     }
     ],
-    price: {
+    basePrice: {
         type: Number,
         default: 0,
     },
@@ -31,8 +31,19 @@ const productSchema = mongoose.Schema({
     isFeatured: {
         type: Boolean,
         default: false,
-    }
-    
+    },
+    hasVariants: {
+        type: Boolean,
+        default: false,
+    },
+    availableColors: [{
+        type: String,
+        trim: true
+    }],
+    availableSizes: [{
+        type: String,
+        trim: true
+    }]
 })
 
 exports.Product = mongoose.model("Product", productSchema);

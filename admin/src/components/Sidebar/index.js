@@ -57,32 +57,39 @@ const Sidebar = () => {
                         : "colapsed"
                 }`}>
                 <ul className="submenu">
-                    <li><Link to="/product">Product List</Link></li>
-                    <li><Link to="/product/details">Product View</Link></li>
+                    <li><Link to="/products">Product List</Link></li>
+                    {/* <li><Link to="/product/details">Product View</Link></li> */}
                     <li><Link to="/product/upload">Product Upload</Link></li>
+                </ul>
+                </div>
+            </li>
+            <li>
+                <Button
+                    className={`w-100 ${activeTab === 2 && isToggleSubmenu === true ? "active" : ""}`}
+                        onClick={()=>isOpenSubmenu(2)}>
+                    <span className="icon"><LuMessagesSquare /></span>
+                    Messages
+                    <span className="arrow">
+                <FaAngleRight />
+              </span>
+                </Button>
+                <div className={`submenuWrapper ${
+                    activeTab === 2 && isToggleSubmenu === true
+                        ? "colapse"
+                        : "colapsed"
+                }`}>
+                <ul className="submenu">
+                    <li><Link to="/contact-messages">Contact Messages</Link></li>
                 </ul>
                 </div>
             </li>
             <li>
                 <Link to="/">
                 <Button
-                    className={`w-100 ${activeTab === 2 ? "active" : ""}`}
-                    onClick={()=>isOpenSubmenu(2)}>
-                    <span className="icon"><TbShoppingCartBolt /></span>
-                    Orders
-                    <span className="arrow">
-                <FaAngleRight />
-              </span>
-                </Button>
-                </Link>
-            </li>
-            <li>
-                <Link to="/">
-                <Button
                     className={`w-100 ${activeTab === 3 ? "active" : ""}`}
                     onClick={()=>isOpenSubmenu(3)}>
-                    <span className="icon"><LuMessagesSquare /></span>
-                    Messages
+                    <span className="icon"><TbShoppingCartBolt /></span>
+                    Orders
                     <span className="arrow">
                 <FaAngleRight />
               </span>

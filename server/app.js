@@ -19,6 +19,7 @@ const cartRoutes = require('./routes/cart');
 const orderRoutes = require('./routes/orders');
 const adminRoutes = require('./routes/admin');
 const adminProductRoutes = require('./routes/adminProduct');
+const contactRoutes = require('./routes/contact');
 
 app.use(`/api/category`, categoryRoutes);
 app.use(`/api/products`, productRoutes);
@@ -26,6 +27,7 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin/product', adminProductRoutes);
+app.use('/api/contact', contactRoutes);
 
 // Database
 mongoose.connect(process.env.CONNECTION_STRING, {
