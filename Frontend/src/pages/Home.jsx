@@ -29,9 +29,9 @@ const Home = () => {
                 const response = await fetch(API_ENDPOINTS.PRODUCTS);
                 const data = await response.json();
                 
-                // Transform API data to match mockData format
+                
                 const transformedProducts = data.map((product, index) => ({
-                    id: product._id || index + 1,
+                    id: product._id,
                     image: product.image && product.image.length > 0 ? product.image[0] : '',
                     name: product.name,
                     description: product.description,
@@ -99,7 +99,7 @@ const Home = () => {
                     {/* Centered Best Sellers Heading */}
                     <div className="flex justify-center mb-6">
                         <Link
-                            to="/shop"
+                            to="/bestsellers"
                             className="inline-flex items-center gap-2 text-4xl font-extrabold !text-black !underline no-underline hover:no-underline group"
                         >
                             Best Sellers
@@ -107,10 +107,11 @@ const Home = () => {
                         </Link>
                     </div>
 
-                    {/*Product Cards */}
+                    {/* Random 5 Best Sellers */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-                        {products.products
-                            .filter(product => product.isFeatured)
+                        {[...products.products
+                            .filter(product => product.isFeatured)]
+                            .sort(() => 0.5 - Math.random())
                             .slice(0, 5)
                             .map((product, index) => (
                                 <ProductCard key={index} product={product} />

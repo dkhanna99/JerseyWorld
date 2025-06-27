@@ -29,7 +29,7 @@ const ProductCard = ({ product }) => {
         if (isAddingToCart) return;
 
         if (product.availableColors?.length > 0 || product.availableSizes?.length > 0) {
-            navigate(`/product/${product._id}`);
+            navigate(`/product/${product.id}`);
             return;
         }
 
@@ -62,7 +62,7 @@ const ProductCard = ({ product }) => {
 
     return (
         <div className="bg-white p-4 shadow rounded border transform transition-transform duration-300 hover:scale-105 flex flex-col justify-between h-full">
-            <Link to={`/product/${product._id}`}>
+            <Link to={`/product/${product.id}`}>
                 <img
                     src={product.image}
                     alt={product.name}
@@ -72,7 +72,7 @@ const ProductCard = ({ product }) => {
             </Link>
 
             <div className="flex-1 flex flex-col justify-between">
-                <Link to={`/product/${product._id}`}>
+                <Link to={`/product/${product.id}`}>
                     <h3 className="text-lg font-semibold mb-2 text-black cursor-pointer hover:text-red-600 transition-colors">
                         {product.name}
                     </h3>

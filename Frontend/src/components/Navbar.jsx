@@ -135,6 +135,9 @@ const NavLinks = ({ mobile }) => (
         <Link to="/" className={`relative hover:text-black transition-colors after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-black after:transition-all after:duration-300 hover:after:w-full ${mobile ? 'text-lg' : ''}`}>Home</Link>
         <Link to="/categories" className={`relative hover:text-black transition-colors after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-black after:transition-all after:duration-300 hover:after:w-full ${mobile ? 'text-lg' : ''}`}>Categories</Link>
         <Link to="/shop" className={`relative hover:text-black transition-colors after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-black after:transition-all after:duration-300 hover:after:w-full ${mobile ? 'text-lg' : ''}`}>Shop</Link>
+        <Link to="/bestsellers" className={`relative hover:text-black transition-colors after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-black after:transition-all after:duration-300 hover:after:w-full ${mobile ? 'text-lg' : ''}`}>
+            Best Sellers
+        </Link>
         <Link to="/contactus" className={`relative hover:text-black transition-colors after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-black after:transition-all after:duration-300 hover:after:w-full ${mobile ? 'text-lg' : ''}`}>Contact</Link>
         <Link to="/aboutus" className={`relative hover:text-black transition-colors after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-black after:transition-all after:duration-300 hover:after:w-full ${mobile ? 'text-lg' : ''}`}>About Us</Link>
     </>

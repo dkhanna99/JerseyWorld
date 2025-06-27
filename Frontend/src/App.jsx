@@ -19,6 +19,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Checkout from "./pages/Checkout.jsx";
 import ThankYou from "./pages/ThankYou.jsx";
+import BestSellers from "./pages/BestSellers.jsx";
 
 function App() {
     const dispatch = useDispatch();
@@ -45,6 +46,7 @@ function App() {
                         <Route path="/product/:id" element={<ProductDetail />} />
                         <Route path="/checkout" element={<Checkout />} />
                         <Route path="/thank-you" element={<ThankYou />} />
+                        <Route path="/bestsellers" element={<BestSellers />} />
                     </Routes>
                 </main>
                 <Footer />
