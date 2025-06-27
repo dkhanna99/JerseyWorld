@@ -8,10 +8,18 @@ const FilterData = () => {
     const dispatch = useDispatch();
     const searchTerm = useSelector((state) => state.products.searchTerm);
     const filteredData = useSelector((state) => state.products.filteredData);
+    const [loading, setLoading] = React.useState(false);
 
     useEffect(() => {
         const fetchFilteredProducts = async () => {
-            if (!searchTerm) return;
+            if (!searchTerm) {
+                dispatch(setFilteredData([]));
+                return;
+            }
+
+            // Clear old data immediately when search term changes
+            dispatch(setFilteredData([]));
+            setLoading(true);
 
             try {
                 const response = await fetch(`http://localhost:4000/api/products/search?q=${encodeURIComponent(searchTerm)}`);
@@ -19,10 +27,19 @@ const FilterData = () => {
                     throw new Error(`API Error: ${response.status}`);
                 }
                 const data = await response.json();
-                dispatch(setFilteredData(data));
+                
+                // Transform data to add id field
+                const transformedData = data.map(product => ({
+                    ...product,
+                    id: product._id
+                }));
+                
+                dispatch(setFilteredData(transformedData));
             } catch (error) {
                 console.error('Error fetching search results:', error.message);
                 dispatch(setFilteredData([]));
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -31,7 +48,11 @@ const FilterData = () => {
 
     return (
         <div className="mx-auto py-50 px-4 md:px-16 lg:px-24 bg-white">
-            {filteredData.length > 0 ? (
+            {loading ? (
+                <div className="flex justify-center items-center py-20">
+                    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-red-600"></div>
+                </div>
+            ) : filteredData.length > 0 ? (
                 <>
                     <h2 className="text-3xl font-bold mb-6 text-center text-black">Search Results</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
