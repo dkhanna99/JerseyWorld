@@ -39,11 +39,10 @@ const Categories = () => {
                     description: product.description,
                     price: product.basePrice,
                     rating: product.rating,
-                    category: product.category ? product.category.name : 'Uncategorized',
+                    categories: product.categories ? product.categories.map(c => c._id) : [],
                     hasVariants: product.hasVariants || false,
                     variants: product.variants || []
                 }));
-                
                 setProducts(transformedProducts);
                 
             } catch (error) {
@@ -57,16 +56,16 @@ const Categories = () => {
         fetchData();
     }, []);
 
-    const handleCategoryClick = (category) => {
-        if (category === selectedCategory) {
-            setSelectedCategory(null); 
+    const handleCategoryClick = (categoryId) => {
+        if (categoryId === selectedCategory) {
+            setSelectedCategory(null);
         } else {
-            setSelectedCategory(category);
+            setSelectedCategory(categoryId);
         }
     };
 
     const filteredProducts = selectedCategory
-        ? products.filter((product) => product.category === selectedCategory)
+        ? products.filter((product) => product.categories.includes(selectedCategory))
         : products;
 
     if (loading) return <div className="text-center py-20 text-2xl text-black">Loading...</div>;
@@ -82,7 +81,7 @@ const Categories = () => {
                     {categories.map((category, index) => (
                         <div
                             key={category.id || index}
-                            onClick={() => handleCategoryClick(category.title)}
+                            onClick={() => handleCategoryClick(category.id)}
                             className={`flex flex-col items-center text-center p-4 border rounded-lg shadow-md hover:shadow-lg transform transition-transform duration-300 hover:scale-105 cursor-pointer
                               ${selectedCategory === category.title ? 'bg-red-100 border-red-500' : ''}`}
                         >
@@ -105,12 +104,24 @@ const Categories = () => {
                         </div>
                     ))}
                 </div>
+                {selectedCategory && (
+                    <div className="text-center my-4">
+                        <button
+                            onClick={() => setSelectedCategory(null)}
+                            className="px-4 py-2 !bg-gray-300 text-black rounded hover:bg-gray-400 transition"
+                        >
+                            Clear Filter
+                        </button>
+                    </div>
+                )}
             </div>
 
             {/* Products */}
             <div className="text-center mb-8">
                 <h2 className="text-3xl font-semibold mb-6 text-black">
-                    {selectedCategory ? `${selectedCategory} Products` : "All Products"}
+                    {selectedCategory
+                        ? `${(categories.find(cat => cat.id === selectedCategory)?.title || 'Selected')} Products`
+                        : "All Products"}
                 </h2>
                 {filteredProducts.length === 0 ? (
                     <p className="text-gray-500">No products found.</p>

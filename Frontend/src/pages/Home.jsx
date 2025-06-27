@@ -95,22 +95,25 @@ const Home = () => {
 
             <div className="bg-white py-12">
                 <div className="container mx-auto">
-                    {/* Centered Top Products Heading */}
+                    {/* Centered Best Sellers Heading */}
                     <div className="flex justify-center mb-6">
                         <Link
                             to="/shop"
                             className="inline-flex items-center gap-2 text-4xl font-extrabold !text-black !underline no-underline hover:no-underline group"
                         >
-                            Top Products
+                            Best Sellers
                             <FaArrowRight className="text-2xl !text-black transform transition-transform duration-300 group-hover:translate-x-2" />
                         </Link>
                     </div>
 
                     {/*Product Cards */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-                        {products.products.slice(0, 5).map((product, index) => (
-                            <ProductCard key={index} product={product} />
-                        ))}
+                        {products.products
+                            .filter(product => product.category?.toLowerCase() === 'Best Sellers')
+                            .slice(0, 5)
+                            .map((product, index) => (
+                                <ProductCard key={index} product={product} />
+                            ))}
                     </div>
                 </div>
             </div>

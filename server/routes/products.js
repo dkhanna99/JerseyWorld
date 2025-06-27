@@ -9,7 +9,7 @@ const pLimit = require('p-limit');
 // GET: Fetch all products
 router.get('/', async (req, res) => {
     try {
-        const productList = await Product.find().populate("category");
+        const productList = await Product.find().populate("categories");
         if (!productList) {
             return res.status(500).json({ success: false });
         }
@@ -50,7 +50,7 @@ router.get('/search', async (req, res) => {
 
     const terms = query.trim().toLowerCase().split(/\s+/);
     try {
-        const products = await Product.find().populate("category").lean();
+        const products = await Product.find().populate("categories", "name").lean();
         const variants = await ProductVariant.find().lean();
 
         const results = products.filter(product => {
@@ -92,7 +92,7 @@ router.get('/search', async (req, res) => {
 // GET: Fetch a specific Product by ID with variants
 router.get('/:id', async (req, res) => {
     try {
-        const product = await Product.findById(req.params.id).populate("category");
+        const product = await Product.findById(req.params.id).populate("categories");
         if (!product) {
             return res.status(404).json({ success: false, message: 'Product not found' });
         }
@@ -121,11 +121,16 @@ router.get('/:id', async (req, res) => {
 router.post('/create', async (req, res) => {
     try {
         console.log('Received request body:', req.body);
+        if (!req.body.categories || !Array.isArray(req.body.categories) || req.body.categories.length === 0) {
+            return res.status(400).json({ error: "At least one category is required", status: false });
+        }
         console.log('Base price from request:', req.body.basePrice, 'Type:', typeof req.body.basePrice);
-        
-        const category = await Category.findById(req.body.category);
-        if (!category) return res.status(404).send("Category not found");
 
+        const foundCategories = await Category.find({ _id: { $in: req.body.categories } });
+        if (foundCategories.length !== req.body.categories.length) {
+            return res.status(404).send("One or more categories not found");
+        }
+        
         // Validate images
         if (!req.body.images || !Array.isArray(req.body.images) || req.body.images.length === 0) {
             return res.status(400).json({ error: "Images are required and must be an array", status: false });
@@ -157,7 +162,7 @@ router.post('/create', async (req, res) => {
             image: imgurl,
             basePrice: basePrice,
             rating: req.body.rating,
-            category: req.body.category,
+            categories: req.body.categories,
             isFeatured: req.body.isFeatured,
             hasVariants: req.body.hasVariants || false,
             availableColors: req.body.availableColors || [],
@@ -235,11 +240,16 @@ router.post('/create', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         console.log('Update request body:', req.body);
+        if (!req.body.categories || !Array.isArray(req.body.categories) || req.body.categories.length === 0) {
+            return res.status(400).json({ error: "At least one category is required", status: false });
+        }
         console.log('Base price from update request:', req.body.basePrice, 'Type:', typeof req.body.basePrice);
-        
-        const category = await Category.findById(req.body.category);
-        if (!category) return res.status(404).send("Category not found");
 
+        const foundCategories = await Category.find({ _id: { $in: req.body.categories } });
+        if (foundCategories.length !== req.body.categories.length) {
+            return res.status(404).send("One or more categories not found");
+        }
+        
         // Validate images
         if (!req.body.images || !Array.isArray(req.body.images) || req.body.images.length === 0) {
             return res.status(400).json({ error: "Images are required and must be an array", status: false });
@@ -283,7 +293,7 @@ router.put('/:id', async (req, res) => {
                 image: imgurl,
                 basePrice: basePrice,
                 rating: req.body.rating,
-                category: req.body.category,
+                categories: req.body.categories,
                 isFeatured: req.body.isFeatured,
                 hasVariants: req.body.hasVariants || false,
                 availableColors: req.body.availableColors || [],

@@ -189,7 +189,7 @@ const ProductDetails = () => {
                                             <span className="name">Category</span>
                                         </div>
                                         <div className="col-sm-7">
-                                            <span>{product.category ? product.category.name : 'Uncategorized'}</span>
+                                            <span>{product.categories && product.categories.length > 0 ? product.categories.map((cat) => cat.name).join(', ') : 'Uncategorized'}</span>
                                         </div>
                                     </div>
                                     <div className="row">

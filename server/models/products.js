@@ -1,6 +1,7 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const productSchema = mongoose.Schema({
+const productSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -23,11 +24,7 @@ const productSchema = mongoose.Schema({
         type: Number,
         default: 0,
     },
-    category: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category',
-        required: true,
-    },
+    categories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true }],
     isFeatured: {
         type: Boolean,
         default: false,

@@ -413,6 +413,21 @@ const ProductUpload = () => {
             return;
         }
 
+        let categoriesToSend = [formData.category];
+
+        if (formData.isFeatured) {
+            const bestsellerCategory = categories.find(
+                (cat) => cat.name.toLowerCase().includes('best seller')
+            );
+
+            if (
+                bestsellerCategory &&
+                !categoriesToSend.includes(bestsellerCategory._id)
+            ) {
+                categoriesToSend.push(bestsellerCategory._id);
+            }
+        }
+
         setLoading(true);
         setError(null);
 
@@ -428,18 +443,21 @@ const ProductUpload = () => {
             }
 
             // Create product data
-            const productData = {
+
+            const BESTSELLER_ID = "685bd3500961709015e0d590";
+
+           const productData = {
                 name: formData.name,
                 description: formData.description,
-                category: formData.category,
+                categories: categoriesToSend,
                 basePrice: parseFloat(formData.basePrice),
                 rating: formData.rating,
                 isFeatured: formData.isFeatured,
                 hasVariants: formData.hasVariants,
-                availableColors: availableColors,
-                availableSizes: availableSizes,
+                availableColors,
+                availableSizes,
                 images: imagesToSend,
-                variants: formData.hasVariants ? variants : []
+                variants: formData.hasVariants ? variants : [],
             };
 
             console.log('Sending product data:', productData);
@@ -637,6 +655,11 @@ const ProductUpload = () => {
                                                 }
                                                 label="Mark as featured product"
                                             />
+                                            {formData.isFeatured && (
+                                                <small className="text-success ms-1 d-block">
+                                                    This product will also be added to the <strong>Best Sellers</strong> category.
+                                                </small>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
