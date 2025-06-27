@@ -32,6 +32,7 @@ const Login = () => {
         if (email === 'admin@jerseyworld.com' && password === 'jerseyworld99') {
             localStorage.setItem('isAdminAuthenticated', 'true');
             context.setIsLogin(true);
+            context.setIsHideSidebarAndHeader(false); 
             navigate('/');
         } else {
             setError('Invalid credentials');
