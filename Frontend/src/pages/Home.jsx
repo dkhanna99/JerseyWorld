@@ -37,7 +37,8 @@ const Home = () => {
                     description: product.description,
                     price: product.basePrice,
                     rating: product.rating,
-                    category: product.category ? product.category.name : 'Uncategorized',
+                    categories: product.categories ? product.categories.map(c => c._id) : [],
+                    isFeatured: product.isFeatured || false,
                     hasVariants: product.hasVariants || false,
                     variants: product.variants || [],
                     availableColors: product.availableColors || [],
@@ -109,7 +110,7 @@ const Home = () => {
                     {/*Product Cards */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
                         {products.products
-                            .filter(product => product.category?.toLowerCase() === 'Best Sellers')
+                            .filter(product => product.isFeatured)
                             .slice(0, 5)
                             .map((product, index) => (
                                 <ProductCard key={index} product={product} />

@@ -29,6 +29,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/admin/product', adminProductRoutes);
 app.use('/api/contact', contactRoutes);
 
+
 // Database
 mongoose.connect(process.env.CONNECTION_STRING, {
     useNewUrlParser: true,

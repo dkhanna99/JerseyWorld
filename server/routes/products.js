@@ -49,6 +49,7 @@ router.get('/search', async (req, res) => {
     if (!query) return res.status(400).json({ message: 'Missing search query' });
 
     const terms = query.trim().toLowerCase().split(/\s+/);
+
     try {
         const products = await Product.find().populate("categories", "name").lean();
         const variants = await ProductVariant.find().lean();
@@ -57,22 +58,22 @@ router.get('/search', async (req, res) => {
             const textFields = [
                 product.name || '',
                 product.description || '',
-                product.category?.name || ''
+                ...(product.categories || []).map(cat => cat.name || '') 
             ];
-
-            // Add variant sizes for this product
+            
             variants
                 .filter(v => v.productId.toString() === product._id.toString())
-                .forEach(v => textFields.push(v.size));
+                .forEach(v => {
+                    if (v.size) textFields.push(v.size);
+                });
 
             const combinedText = textFields.join(' ').toLowerCase();
             return terms.every(term => combinedText.includes(term));
         });
-
-        // Add variants to products that have them
+        
         const resultsWithVariants = results.map(product => {
             if (product.hasVariants) {
-                const productVariants = variants.filter(v => 
+                const productVariants = variants.filter(v =>
                     v.productId.toString() === product._id.toString()
                 );
                 return {
@@ -85,9 +86,11 @@ router.get('/search', async (req, res) => {
 
         res.json(resultsWithVariants);
     } catch (err) {
+        console.error("Search error:", err);
         res.status(500).json({ error: err.message });
     }
 });
+
 
 // GET: Fetch a specific Product by ID with variants
 router.get('/:id', async (req, res) => {
@@ -131,7 +134,7 @@ router.post('/create', async (req, res) => {
             return res.status(404).send("One or more categories not found");
         }
         
-        // Validate images
+        
         if (!req.body.images || !Array.isArray(req.body.images) || req.body.images.length === 0) {
             return res.status(400).json({ error: "Images are required and must be an array", status: false });
         }
@@ -148,7 +151,7 @@ router.post('/create', async (req, res) => {
 
         const imgurl = uploadStatus.map(item => item.secure_url);
 
-        // Parse and validate basePrice
+        
         const basePrice = parseFloat(req.body.basePrice);
         if (isNaN(basePrice) || basePrice < 0) {
             return res.status(400).json({ error: "Invalid base price", status: false });
@@ -235,6 +238,29 @@ router.post('/create', async (req, res) => {
         res.status(500).json({ error: error.message, status: false });
     }
 });
+
+router.get("/search", async (req, res) => {
+    const query = req.query.q;
+
+    if (!query) {
+        return res.json([]);
+    }
+
+    const terms = query.toLowerCase().split(" "); 
+
+    try {
+        const matchedProducts = allProducts.filter((product) => {
+            const searchable = `${product.name} ${product.description} ${product.category}`.toLowerCase();
+            return terms.every(term => searchable.includes(term));
+        });
+
+        res.json(matchedProducts);
+    } catch (err) {
+        console.error("Search error:", err);
+        res.status(500).json({ error: "Search failed" });
+    }
+});
+
 
 // PUT: Update Product by ID
 router.put('/:id', async (req, res) => {
