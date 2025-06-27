@@ -28,15 +28,27 @@ const ProductCard = ({ product }) => {
         e.preventDefault();
         if (isAddingToCart) return;
 
+        // Redirect if options are required
         if (product.availableColors?.length > 0 || product.availableSizes?.length > 0) {
-            navigate(`/product/${product.id}`);
+            navigate(`/product/${product.id || product._id}`);
             return;
         }
 
         try {
             setIsAddingToCart(true);
-            const updatedCart = await addProductToCart(product);
-            dispatch(addToCart(product));
+
+            // Normalize product before passing
+            const cleanProduct = {
+                _id: product._id || product.id,
+                name: product.name || 'Unnamed Product',
+                image: product.image,
+                price: product.price || product.basePrice || 0,
+                attributeId: product.attributeId || null,
+                quantity: 1
+            };
+
+            const updatedCart = await addProductToCart(cleanProduct);
+            dispatch(addToCart(cleanProduct));
         } catch (error) {
             console.error("Failed to add to cart:", error);
         } finally {

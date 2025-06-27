@@ -328,14 +328,19 @@ export const cleanupCartItems = async (cartData = null) => {
         
         const cleanedItems = currentCart.items.map(item => {
             // If productId is an object, extract the actual ID
-            if (typeof item.productId === 'object' && item.productId !== null) {
+            if (!item.productId) {
+                console.warn('Skipping item with null productId:', item);
+                needsUpdate = true;
+                return null; 
+            }
+
+            if (typeof item.productId === 'object') {
                 needsUpdate = true;
                 return {
                     ...item,
                     productId: item.productId._id || item.productId.id
                 };
             }
-            return item;
         });
 
         // Also check for duplicate items and merge them
@@ -352,8 +357,8 @@ export const cleanupCartItems = async (cartData = null) => {
             }
         });
 
-        const finalItems = Array.from(itemMap.values());
-
+        const finalItems = Array.from(itemMap.values()).filter(item => item !== null);
+        
         if (needsUpdate) {
             console.log('Cleaning up cart items with wrong productId structure and merging duplicates');
             
