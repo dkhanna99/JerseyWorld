@@ -1,23 +1,66 @@
 # Dhruv Khanna (86797909)
-## Assignment 2
 
-For Assignment 2, I have created an **E-commerce web application** called **Jersey World** using **React**, **Redux Toolkit**, and **Tailwind CSS**.
+## Assignment 3
 
-### Main Features:
-- **Home Page**: Showcases featured products.
-- **Shop Page**: Displays all available products.
-- **Categories Page**: Displays product categories with icons.
-- **Search Functionality**: Allows users to search products by name.
-- **Filter Page**: Displays products based on search results.
-- **Product Detail Page**: Shows detailed information (name, price, image, description) for each product.
-- **Cart Functionality**: Users can add, view, and remove products from their cart.
-- **About Us Page**: Details about the store and mission.
-- **Contact Us Page**: Simple contact form and information.
+**Website Names**:
 
-### Technical Details:
-- Built with **React** and **React Router DOM** for routing.
-- **Redux Toolkit** used for global state management (products and cart).
-- **Tailwind CSS** for responsive and clean UI styling.
-- **React Icons** for consistent and attractive icons across the site.
+- **Jersey World** (Frontend) – available at `http://localhost:5173`
+- **Jersey World Admin** (Admin Panel) – available at `http://localhost:3000`
 
-The project demonstrates a complete front-end shopping experience, responsive design, and basic client-side routing and state management principles.
+---
+
+### What I Built
+
+This assignment extends the Jersey World e-commerce site from Assignment 2 by integrating a full backend with Node.js,
+Express.js, and MongoDB. I created a RESTful API that powers the frontend and an admin dashboard with full CRUD
+functionality.
+
+---
+
+### ✅ Core Features Implemented
+
+- **Complete REST API** built with Express and MongoDB
+- **Product Search** with multi-field "AND" logic (name, description, variants, categories)
+- **Best Sellers Category**:
+    - At least 1 product from each category
+    - Shown dynamically on the homepage
+- **Checkout System**:
+    - Converts cart into order
+    - Generates a unique order ID
+- **Admin Dashboard**:
+    - View all active carts
+    - View all completed orders
+    - Add, update, and delete products
+    - Receive messages from “Contact Us” form
+- **Protected Routes** for Admin pages
+
+---
+
+### 🌟 Extra Feature
+
+I built a fully functional **admin panel** with CRUD operations for products, real-time cart/order tracking, and secure
+access through protected routes. The system also integrates a contact form that submits user messages to the admin
+dashboard — all data-driven and backed by MongoDB.
+
+---
+
+### 🚀 How to Run via Docker
+
+1. Clone the repository and checkout the `Assignment3` branch:
+   ```bash
+   git clone https://github.students.cs.ubc.ca/CPSC455-2025S/students-khanna99.git
+   cd students-khanna99
+   git checkout Assignment3
+   ```
+2. Run the app with Docker Compose:
+
+```bash
+docker-compose build
+docker-compose up
+```
+
+### 🔗 Access the Application
+
+- **Frontend (Jersey World)**: [http://localhost:5173](http://localhost:5173)
+- **Admin Panel (Jersey World Admin)**: [http://localhost:3000](http://localhost:3000)
+- **Backend API**: [http://localhost:4000](http://localhost:4000)

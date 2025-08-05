@@ -7,17 +7,53 @@ import InfoSection from "../components/InfoSection.jsx";
 import CategorySection from "../components/CategorySection.jsx";
 import { setProducts} from "../redux/productSlice.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { Categories, mockData} from "../assets/mockData.jsx";
 import ProductCard from "../components/ProductCard.jsx";
 import { Link } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
+import { API_ENDPOINTS } from "../config.js";
+import { initializeCartOnce } from "../utils/cartUtils.js";
+
 const Home = () => {
     
     const dispatch = useDispatch()
     const products = useSelector(state => state.products)
+    
     useEffect(() =>{
-        dispatch(setProducts(mockData))
-    }, [])
+        const initializeData = async () => {
+            try {
+                // Initialize cart only once
+                const cart = await initializeCartOnce();
+                console.log('Cart initialized:', cart);
+                
+                // Fetch products
+                const response = await fetch(API_ENDPOINTS.PRODUCTS);
+                const data = await response.json();
+                
+                
+                const transformedProducts = data.map((product, index) => ({
+                    id: product._id,
+                    image: product.image && product.image.length > 0 ? product.image[0] : '',
+                    name: product.name,
+                    description: product.description,
+                    price: product.basePrice,
+                    rating: product.rating,
+                    categories: product.categories ? product.categories.map(c => c._id) : [],
+                    isFeatured: product.isFeatured || false,
+                    hasVariants: product.hasVariants || false,
+                    variants: product.variants || [],
+                    availableColors: product.availableColors || [],
+                    availableSizes: product.availableSizes || []
+                }));
+                
+                dispatch(setProducts(transformedProducts));
+            } catch (error) {
+                console.error('Error initializing data:', error);
+            }
+        };
+        
+        initializeData();
+    }, [dispatch])
+
     return (
         <div className="w-full pt-30"> 
             {/* Hero Section 1 */}
@@ -60,22 +96,26 @@ const Home = () => {
 
             <div className="bg-white py-12">
                 <div className="container mx-auto">
-                    {/* Centered Top Products Heading */}
+                    {/* Centered Best Sellers Heading */}
                     <div className="flex justify-center mb-6">
                         <Link
-                            to="/shop"
+                            to="/bestsellers"
                             className="inline-flex items-center gap-2 text-4xl font-extrabold !text-black !underline no-underline hover:no-underline group"
                         >
-                            Top Products
+                            Best Sellers
                             <FaArrowRight className="text-2xl !text-black transform transition-transform duration-300 group-hover:translate-x-2" />
                         </Link>
                     </div>
 
-                    {/*Product Cards */}
+                    {/* Random 5 Best Sellers */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-                        {products.products.slice(0, 5).map((product, index) => (
-                            <ProductCard key={index} product={product} />
-                        ))}
+                        {[...products.products
+                            .filter(product => product.isFeatured)]
+                            .sort(() => 0.5 - Math.random())
+                            .slice(0, 5)
+                            .map((product, index) => (
+                                <ProductCard key={index} product={product} />
+                            ))}
                     </div>
                 </div>
             </div>

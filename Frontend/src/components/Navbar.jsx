@@ -3,10 +3,12 @@ import { FaSearch, FaShoppingCart, FaUser, FaBars, FaTimes } from "react-icons/f
 import { Link } from "react-router-dom";
 import JWlogo from '../assets/JWlogo.png';
 import { useSelector } from "react-redux";
+import { getCartWithProducts } from "../utils/cartUtils.js";
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
+    const [cartItemCount, setCartItemCount] = useState(0);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -23,7 +25,46 @@ const Navbar = () => {
         };
     }, []);
 
-    const product = useSelector((state) => state.cart.products);
+    // Fetch cart data to get real item count
+    useEffect(() => {
+        const fetchCartCount = async () => {
+            try {
+                const cart = await getCartWithProducts();
+                const totalItems = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+                setCartItemCount(totalItems);
+            } catch (error) {
+                console.error('Error fetching cart count:', error);
+                setCartItemCount(0);
+            }
+        };
+
+        fetchCartCount();
+    }, []);
+
+    // Listen for cart updates (you can add a custom event or use a different approach)
+    useEffect(() => {
+        const handleCartUpdate = () => {
+            fetchCartCount();
+        };
+
+        // Listen for custom cart update events
+        window.addEventListener('cartUpdated', handleCartUpdate);
+        
+        return () => {
+            window.removeEventListener('cartUpdated', handleCartUpdate);
+        };
+    }, []);
+
+    const fetchCartCount = async () => {
+        try {
+            const cart = await getCartWithProducts();
+            const totalItems = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+            setCartItemCount(totalItems);
+        } catch (error) {
+            console.error('Error fetching cart count:', error);
+            setCartItemCount(0);
+        }
+    };
 
     return (
         <nav className={`bg-white w-full fixed top-0 left-0 z-50 transition-all duration-300 ${isScrolled ? 'shadow-md py-2' : 'py-4'}`}>
@@ -51,9 +92,9 @@ const Navbar = () => {
                 <div className='flex-1 flex justify-end items-center space-x-4'>
                     <Link to="/cart" className="relative">
                         <FaShoppingCart className='text-2xl cursor-pointer transition-transform duration-300 transform hover:scale-110' />
-                        {product.length > 0 && (
+                        {cartItemCount > 0 && (
                             <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full"> 
-                                {product.length}
+                                {cartItemCount}
                             </span>
                         )}
                     </Link>
@@ -94,6 +135,9 @@ const NavLinks = ({ mobile }) => (
         <Link to="/" className={`relative hover:text-black transition-colors after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-black after:transition-all after:duration-300 hover:after:w-full ${mobile ? 'text-lg' : ''}`}>Home</Link>
         <Link to="/categories" className={`relative hover:text-black transition-colors after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-black after:transition-all after:duration-300 hover:after:w-full ${mobile ? 'text-lg' : ''}`}>Categories</Link>
         <Link to="/shop" className={`relative hover:text-black transition-colors after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-black after:transition-all after:duration-300 hover:after:w-full ${mobile ? 'text-lg' : ''}`}>Shop</Link>
+        <Link to="/bestsellers" className={`relative hover:text-black transition-colors after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-black after:transition-all after:duration-300 hover:after:w-full ${mobile ? 'text-lg' : ''}`}>
+            Best Sellers
+        </Link>
         <Link to="/contactus" className={`relative hover:text-black transition-colors after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-black after:transition-all after:duration-300 hover:after:w-full ${mobile ? 'text-lg' : ''}`}>Contact</Link>
         <Link to="/aboutus" className={`relative hover:text-black transition-colors after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-black after:transition-all after:duration-300 hover:after:w-full ${mobile ? 'text-lg' : ''}`}>About Us</Link>
     </>
