@@ -1,66 +1,77 @@
-# Dhruv Khanna (86797909)
+<p align="center">
+  <img src="./JWlogo.png" alt="Jersey World Logo" width="300"/>
+</p>
 
-## Assignment 3
+# **JerseyWorld – Full-Stack E-Commerce Platform**
 
-**Website Names**:
-
-- **Jersey World** (Frontend) – available at `http://localhost:5173`
-- **Jersey World Admin** (Admin Panel) – available at `http://localhost:3000`
-
----
-
-### What I Built
-
-This assignment extends the Jersey World e-commerce site from Assignment 2 by integrating a full backend with Node.js,
-Express.js, and MongoDB. I created a RESTful API that powers the frontend and an admin dashboard with full CRUD
-functionality.
+JerseyWorld is a full-stack e-commerce platform designed for browsing, filtering, and purchasing official sports jerseys. It features a modern UI, secure authentication, an admin dashboard with full product management, and a scalable backend API.
 
 ---
 
-### ✅ Core Features Implemented
+## 🌐 **Website URLs**
 
-- **Complete REST API** built with Express and MongoDB
-- **Product Search** with multi-field "AND" logic (name, description, variants, categories)
-- **Best Sellers Category**:
-    - At least 1 product from each category
-    - Shown dynamically on the homepage
-- **Checkout System**:
-    - Converts cart into order
-    - Generates a unique order ID
-- **Admin Dashboard**:
-    - View all active carts
-    - View all completed orders
-    - Add, update, and delete products
-    - Receive messages from “Contact Us” form
-- **Protected Routes** for Admin pages
+- **Jersey World (Frontend):** http://localhost:5173  
+- **Jersey World Admin (Admin Panel):** http://localhost:3000  
 
 ---
 
-### 🌟 Extra Feature
+## 🔐 **Admin Access (Demo Credentials)**
 
-I built a fully functional **admin panel** with CRUD operations for products, real-time cart/order tracking, and secure
-access through protected routes. The system also integrates a contact form that submits user messages to the admin
-dashboard — all data-driven and backed by MongoDB.
+To access the admin panel, use the login link located in the **footer** of the main site.
+
+**Demo Credentials:**
+- **Email:** admin@jerseyworld.com
+- **Password:** jerseyworld99
+
+The admin dashboard includes full product CRUD functionality, real-time cart and order tracking, and protected admin routes.
 
 ---
 
-### 🚀 How to Run via Docker
+## 🚀 **Features**
 
-1. Clone the repository and checkout the `Assignment3` branch:
-   ```bash
-   git clone https://github.students.cs.ubc.ca/CPSC455-2025S/students-khanna99.git
-   cd students-khanna99
-   git checkout Assignment3
-   ```
-2. Run the app with Docker Compose:
+### ✅ **Frontend**
+- Modern, responsive UI built with **React** and **Tailwind CSS**
+- **Product browsing**, filtering, and category-based navigation  
+- **Search functionality** with multi-field logic  
+- Detailed **product pages** with images, pricing, and descriptions  
+- Fully functional **shopping cart** (add, update, remove items)  
+- **About** and **Contact** pages  
+- Smooth routing with **React Router**
+
+### ✅ **Backend**
+- RESTful API built using **Node.js**, **Express**, and **MongoDB**
+- **JWT authentication** for secure access  
+- Advanced **product search API** using multi-field AND logic  
+- **Order & checkout flow** with unique order IDs  
+- Dynamic **Best Sellers** module  
+- Contact form submissions stored in the database  
+
+### ✅ **Admin Dashboard**
+- Complete **CRUD** for products  
+- Manage **active carts** and **completed orders**  
+- View customer messages from Contact page  
+- Secure admin-only routes  
+- Real-time database-driven views  
+
+---
+
+## 🛠 **Tech Stack**
+
+### **Frontend**
+React • Redux Toolkit • React Router • Tailwind CSS • React Icons  
+
+### **Backend**
+Node.js • Express • MongoDB/Mongoose • JWT Auth  
+
+### **DevOps**
+Docker • Docker Compose
+
+---
+
+## 📦 **Running the Project with Docker**
 
 ```bash
+git clone <repo-url>
+cd jerseyworld
 docker-compose build
 docker-compose up
-```
-
-### 🔗 Access the Application
-
-- **Frontend (Jersey World)**: [http://localhost:5173](http://localhost:5173)
-- **Admin Panel (Jersey World Admin)**: [http://localhost:3000](http://localhost:3000)
-- **Backend API**: [http://localhost:4000](http://localhost:4000)
